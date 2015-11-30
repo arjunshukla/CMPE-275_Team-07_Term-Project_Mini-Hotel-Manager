@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.String;
 import javax.validation.Valid;
 import java.util.ArrayList;
 
@@ -50,6 +54,83 @@ public class AppController extends WebMvcConfigurerAdapter {
 
     @Autowired
     UserImplementation userImplementation;
+
+
+   /* @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
+    public ModelAndView defaultPage() {
+
+        ModelAndView model = new ModelAndView();
+        model.addObject("title", "Spring Security + Hibernate Example");
+        model.addObject("message", "This is default page!");
+        model.setViewName("hello");
+        return model;
+
+    }*/
+
+//    @RequestMapping(value = "/login", method = RequestMethod.GET)
+//    public String login(@RequestParam(value = "error", required = false) String error,
+//                              @RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
+//
+//        ModelAndView model = new ModelAndView();
+//        if (error != null) {
+//            model.addObject("error", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
+//        }
+//
+//        if (logout != null) {
+//            model.addObject("msg", "You've been logged out successfully.");
+//        }
+//        model.setViewName("login");
+//
+//        return model;
+//
+//    }
+
+    @RequestMapping(value = "/login",
+            method = RequestMethod.POST)
+    public String createUser (@Valid @RequestBody UserDTO userDTO) {
+        System.out.println("in /login "+userDTO.getPassword());
+        String result = userImplementation.loginUser(userDTO);
+        System.out.println(result);
+        //return new ResponseEntity<>(UserImplementation.createUser(userDTOObject), HttpStatus.OK);
+        return result;
+    }
+    @RequestMapping(value = "/loginpage", method=RequestMethod.GET)
+    public String loadLoginPage(){
+        System.out.println("in index");
+        StringBuilder contentBuilder = new StringBuilder();
+        String str;
+        try {
+            BufferedReader in = new BufferedReader(new FileReader("view/loginpage.html"));
+
+            while ((str = in.readLine()) != null) {
+                contentBuilder.append(str);
+            }
+            in.close();
+
+        } catch (IOException e) {
+            return "IOException";
+        }
+        String content = contentBuilder.toString();
+        return str;
+    }
+//        personDTOObject.setEmail(email);
+//        personDTOObject.setDescription(description);
+//        personDTOObject.setAddressDTO(addressDTOObject);
+//        personDTOObject.setOrg_id(org_id);
+
+//        try
+//        {
+//            if (firstname.isEmpty() || lastname.isEmpty() || email.isEmpty())
+//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//            else
+//                return new ResponseEntity<>(personImplementation.createPerson(personDTOObject), HttpStatus.OK);
+//        }
+//        catch(Exception e) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//  }
+
+
 
 //    @Autowired
 //    PersonImplementation personImplementation;

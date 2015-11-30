@@ -1,5 +1,12 @@
 package com.project.implementation;
 
+import com.project.dao.InterfaceForUser;
+import com.project.dao.UserDAO;
+import com.project.dto.UserDTO;
+import com.project.entities.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Created by Team07 on 11/21/15.
  * Members: Arjun Shukla, Arpit Khare, Sneha Pimpalkar, Ankit Sharma, Tejas Pai
@@ -7,6 +14,9 @@ package com.project.implementation;
  */
 
 public class UserImplementation {
+
+    @Autowired
+    InterfaceForUser userDao;
 
     //    @Autowired
 //    InterfaceForPersons personsDao;
@@ -16,7 +26,7 @@ public class UserImplementation {
 //
 //    @Autowired
 //    FriendshipImplementation friendshipImplementation;
-//
+
 //
 //	 /*  Create Person*/
 //
@@ -50,7 +60,31 @@ public class UserImplementation {
 //        personDTObject.setPerson_id(personObject.getPerson_id());
 //        return personDTObject;
 //    }
-//
+    @Transactional
+      public String getUserByName(UserDTO userDTO)
+    {
+       String username = userDTO.getUser_name();
+        String password =  userDTO.getPassword();
+
+        User user = new User();
+        user.setUser_name(username);
+        user.setPassword(password);
+
+//        user = userDao.logiUser(user);
+
+
+        return "";
+
+    }
+
+    public String loginUser(UserDTO userDTO) {
+
+        User user = new User();
+        user.setUser_name(userDTO.getUser_name());
+        user.setPassword(userDTO.getPassword());
+
+        return userDao.loginUser(user);
+    }
 //    @Transactional
 //    public PersonDTO getPersonbyId(Integer personId)
 //

@@ -1,5 +1,6 @@
 package com.project.dao;
 
+import com.project.ENUMS.UserType;
 import com.project.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -18,6 +19,8 @@ public class UserDAO implements InterfaceForUser {
 
     @Autowired
     HibernateTemplate hibernateTemplate;
+
+
 
     @Override
     public void save(User user) {
@@ -44,6 +47,23 @@ public class UserDAO implements InterfaceForUser {
         return null;
     }
 
+//    @Override
+//    public User getUserByNamePass(String name, String pass) {
+//        String query = "Select user_type From user Where user_name = name AND password = pass;";
+//        return null;
+//    }
+//    public Person getPersonById(Integer person_id) {
+//        String query = "from Person p where p.person_id = ?";
+//        @SuppressWarnings("unchecked")
+//        List<Person> persons = (List<Person>) hibernateTemplate.find(query,person_id);
+//        if (persons.isEmpty()) {
+//            return null;
+//        } else {
+//            System.out.println();
+//            return persons.get(0);
+//        }
+//    }
+
     @Override
     public User getUserByIdAndUserName(Integer userId, String username) {
         return null;
@@ -52,5 +72,18 @@ public class UserDAO implements InterfaceForUser {
     @Override
     public List<User> getAllUsers() {
         return null;
+    }
+
+    @Override
+    public String loginUser(User user) {
+        String query = " from User u where u.user_name = ? and u.password = ?";
+        List<User> users = (List<User>) hibernateTemplate.find(query,user.getUser_name(),user.getPassword());
+        if (users.isEmpty()) {
+            return "Invalid username or password";
+           // return null;
+        } else {
+            System.out.println(users.get(0).getUser_type().toString());
+            return users.get(0).getUser_type().toString();
+        }
     }
 }
