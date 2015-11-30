@@ -1,7 +1,9 @@
 package com.project.dao;
 
 import com.project.entities.CheckinRoomMapping;
+import com.project.entities.Room;
 
+import java.sql.Date;
 import java.util.List;
 
 
@@ -17,4 +19,5 @@ public interface InterfaceForCheckinRoomMapping {
     public void delete(CheckinRoomMapping checkinRoomMapping);
     public CheckinRoomMapping getCheckinByReservationId(Integer reservation_id);
     public List<CheckinRoomMapping> getAllCheckins();
+    public List<Room> getOccupiedRoomsData(Date d);
 }

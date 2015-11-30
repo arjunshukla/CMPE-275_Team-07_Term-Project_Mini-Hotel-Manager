@@ -77,6 +77,12 @@ public class AppConfiguration {
     }
 
     /*
+    @Bean
+    public ReportImplementation getReportImplementation(){
+        return new ReportImplementation();
+    }
+*/
+    /*
      * Bean For DAO
      */
 
@@ -137,7 +143,13 @@ public class AppConfiguration {
         return new FriendshipDAO();
     }
 
+    /*
+    @Bean
+    public InterfaceForReport getReportDao(){
+        return new ReportDAO();
+    }
 
+*/
 
 
     public DataSource dataSource() {

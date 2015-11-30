@@ -23,7 +23,7 @@ public class Room {
     @JoinColumn(name = "room_type")
     private RoomType room_type;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "room_status", unique = false, nullable = false)
     private RoomStatus room_status;
 

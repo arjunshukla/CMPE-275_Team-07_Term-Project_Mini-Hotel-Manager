@@ -1,5 +1,16 @@
 package com.project.implementation;
 
+import com.project.dao.InterfaceForCheckinRoomMapping;
+import com.project.dto.ReportDTO;
+import com.project.entities.CheckinRoomMapping;
+import com.project.entities.Room;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Team07 on 11/21/15.
  * Members: Arjun Shukla, Arpit Khare, Sneha Pimpalkar, Ankit Sharma, Tejas Pai
@@ -7,6 +18,37 @@ package com.project.implementation;
  */
 
 public class CheckinRoomMappingImplementation {
+
+    @Autowired
+    InterfaceForCheckinRoomMapping ReportDaoObject;
+
+
+    @Transactional
+    public ReportDTO getOccupiedRooms(Date date) {
+        ReportDTO reportDTOObject = new ReportDTO();
+
+        List<Room> roomReportObject;
+        roomReportObject = ReportDaoObject.getOccupiedRoomsData(date);
+
+        if (roomReportObject != null) {
+           List<Integer> roomIntegerList = new ArrayList<Integer>();
+
+            for (Room room : roomReportObject) {
+                roomIntegerList.add(room.getRoom_no());
+            }
+
+            reportDTOObject.setRooms(roomIntegerList);
+            return reportDTOObject;
+        }
+        else{
+            return null;
+        }
+    }
+
+
+
+
+
     //    @Autowired
 //    InterfaceForPersons personsDao;
 //

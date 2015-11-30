@@ -25,12 +25,12 @@ public class Reservation {
     private Guest guest;
 
     @Column(name = "reservation_token", unique = true, nullable = false)
-    private Integer reservation_token;
+    private String reservation_token;
 
     @Column(name="reservation_date", unique=false, nullable = false)
     private Date reservation_date;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name="reservation_status", unique = false, nullable = false)
     private ReservationStatus reservation_status;
 
@@ -50,11 +50,11 @@ public class Reservation {
         this.guest = guest;
     }
 
-    public Integer getReservation_token() {
+    public String getReservation_token() {
         return reservation_token;
     }
 
-    public void setReservation_token(Integer reservation_token) {
+    public void setReservation_token(String reservation_token) {
         this.reservation_token = reservation_token;
     }
 
