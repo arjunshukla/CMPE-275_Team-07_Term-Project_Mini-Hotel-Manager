@@ -1,11 +1,15 @@
 package com.project.implementation;
-
-import com.project.dao.InterfaceForCheckinRoomMapping;
 import com.project.dto.ReportDTO;
+import com.project.dao.InterfaceForCheckinRoomMapping;
+import com.project.dto.CheckinRoomMappingDTO;
 import com.project.entities.CheckinRoomMapping;
-import com.project.entities.Room;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import com.project.entities.Room;
+import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -18,10 +22,54 @@ import java.util.List;
  */
 
 public class CheckinRoomMappingImplementation {
-
     @Autowired
     InterfaceForCheckinRoomMapping ReportDaoObject;
+    @Autowired
+    InterfaceForCheckinRoomMapping checkinRoomMappingDao;
 
+    /*  Create Checkin */
+
+  public CheckinRoomMappingDTO checkin(CheckinRoomMappingDTO checkinRoomMappingDTO) {
+
+        CheckinRoomMapping checkinRoomMappingObject = new CheckinRoomMapping();
+
+        try {
+            org.apache.commons.beanutils.BeanUtils.copyProperties(checkinRoomMappingObject, checkinRoomMappingDTO);
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+      checkinRoomMappingObject = checkinRoomMappingDao.save(checkinRoomMappingObject);
+      return checkinRoomMappingDTO;
+  }
+
+    @Transactional
+    public List<CheckinRoomMappingDTO> getReservationFromCheckinMapping(Integer reservation_id) {
+        List<CheckinRoomMapping> checkinList = checkinRoomMappingDao.getAllCheckins(reservation_id);
+        //List<Room> allRoomsList = new ArrayList<Room>();
+        List<CheckinRoomMappingDTO> checkinDTOList = new ArrayList<CheckinRoomMappingDTO>();
+        if (!checkinList.isEmpty()) {
+            //CheckinRoomMappingDTO checkinRoomMappingDTO = new CheckinRoomMappingDTO();
+            for (CheckinRoomMapping checkroom : checkinList) {
+                CheckinRoomMappingDTO checkinRoomMappingDTO = new CheckinRoomMappingDTO();
+                checkinRoomMappingDTO.setReservation_id(checkroom.getReservation_id());
+                checkinRoomMappingDTO.setRoom_no(checkroom.getRoom_no());
+                checkinRoomMappingDTO.setGuest_count(checkroom.getGuest_count());
+                checkinRoomMappingDTO.setCheckin_date(checkroom.getCheckin_date());
+                checkinRoomMappingDTO.setCheckout_date(checkroom.getCheckout_date());
+                checkinRoomMappingDTO.setMappingId(checkroom.getMappingId());
+                checkinDTOList.add(checkinRoomMappingDTO);
+            }
+        }
+        else
+        {
+            return null;
+        }
+        return checkinDTOList;
+    }
 
     @Transactional
     public ReportDTO getOccupiedRooms(Date date) {
@@ -31,7 +79,7 @@ public class CheckinRoomMappingImplementation {
         roomReportObject = ReportDaoObject.getOccupiedRoomsData(date);
 
         if (roomReportObject != null) {
-           List<Integer> roomIntegerList = new ArrayList<Integer>();
+            List<Integer> roomIntegerList = new ArrayList<Integer>();
 
             for (Room room : roomReportObject) {
                 roomIntegerList.add(room.getRoom_no());
@@ -44,169 +92,4 @@ public class CheckinRoomMappingImplementation {
             return null;
         }
     }
-
-
-
-
-
-    //    @Autowired
-//    InterfaceForPersons personsDao;
-//
-//    @Autowired
-//    InterfaceForFriendship friendshipDao;
-//
-//    @Autowired
-//    FriendshipImplementation friendshipImplementation;
-//
-//
-//	 /*  Create Person*/
-//
-//    public PersonDTO createPerson(PersonDTO personDTObject) {
-//
-//        Person personObject = new Person();
-//
-//        try { org.apache.commons.beanutils.BeanUtils.copyProperties(personObject, personDTObject);}
-//        catch (IllegalAccessException e) { e.printStackTrace(); }
-//        catch (InvocationTargetException e) { e.printStackTrace(); }
-//
-//
-//        personObject.setFirstname(personDTObject.getFirstname());
-//        personObject.setLastname(personDTObject.getLastname());
-//        personObject.setEmail(personDTObject.getEmail());
-//        personObject.setDescription(personDTObject.getDescription());
-//
-//        personObject.setStreet(personDTObject.getAddressDTO().getStreet());
-//        personObject.setCity(personDTObject.getAddressDTO().getCity());
-//        personObject.setState(personDTObject.getAddressDTO().getState());
-//        personObject.setZip(personDTObject.getAddressDTO().getZip());
-//
-//        // for org
-//        Organization organization = personsDao.getOrganizationById(personDTObject.getOrg_id());
-//
-//        if(organization!=null)
-//            personObject.setOrganization(organization);
-//
-//        personObject = personsDao.save(personObject);
-//
-//        personDTObject.setPerson_id(personObject.getPerson_id());
-//        return personDTObject;
-//    }
-//
-//    @Transactional
-//    public PersonDTO getPersonbyId(Integer personId)
-//
-//    {
-//        PersonDTO personDTO = new PersonDTO();
-//
-//        Person person = personsDao.getPersonById(personId);
-//        if(person!=null) {
-//            AddressDTO addressDTO = new AddressDTO();
-//            Organization organization = new Organization();
-//
-//            personDTO.setPerson_id(person.getPerson_id());
-//            personDTO.setFirstname(person.getFirstname());
-//            personDTO.setLastname(person.getLastname());
-//            personDTO.setEmail(person.getEmail());
-//            personDTO.setDescription(person.getDescription());
-//
-//            addressDTO.setStreet(person.getStreet());
-//            addressDTO.setCity(person.getCity());
-//            addressDTO.setState(person.getState());
-//            addressDTO.setZip(person.getZip());
-//
-//            personDTO.setAddressDTO(addressDTO);
-//
-//            ArrayList<Friendship> friends = new ArrayList<Friendship>();
-//            friends = friendshipDao.getFriendsForId(person.getPerson_id());
-//            personDTO.setFriendship(friends);
-//
-//            if (person.getOrganization() != null) {
-//                System.out.println("person has org");
-//                if (person.getOrganization().getOrg_id() != null)
-//                    personDTO.setOrg_id(person.getOrganization().getOrg_id());
-//                else
-//                    personDTO.setOrg_id(0);
-//            }
-//            return personDTO;
-//        } else
-//            return null;
-//    }
-//
-//
-//    public PersonDTO updatePerson(PersonDTO personDTOObject) {
-//        Person personObject = new Person();
-//
-//        personObject = personsDao.getPersonByEmail(personDTOObject.getEmail());
-//
-//        if (personObject != null && personObject.getPerson_id() == personDTOObject.getPerson_id()) {
-//
-//            try {
-//                org.apache.commons.beanutils.BeanUtils.copyProperties(personObject, personDTOObject);
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//            personObject.setFirstname(personDTOObject.getFirstname());
-//            personObject.setLastname(personDTOObject.getLastname());
-//            personObject.setEmail(personDTOObject.getEmail());
-//            personObject.setDescription(personDTOObject.getDescription());
-//
-//            personObject.setStreet(personDTOObject.getAddressDTO().getStreet());
-//            personObject.setCity(personDTOObject.getAddressDTO().getCity());
-//            personObject.setState(personDTOObject.getAddressDTO().getState());
-//            personObject.setZip(personDTOObject.getAddressDTO().getZip());
-//
-//
-//            ArrayList<Friendship> friends = new ArrayList<Friendship>();
-//            friends = friendshipDao.getFriendsForId(personObject.getPerson_id());
-//            personDTOObject.setFriendship(friends);
-//
-//
-//            // for org
-//            Organization organization = new Organization();
-//
-//            organization = personsDao.getOrganizationById(personDTOObject.getOrg_id());
-//
-//            if (organization != null)
-//                personObject.setOrganization(organization);
-//
-//
-//            personsDao.update(personObject);
-//            personObject = personsDao.getPersonByEmail(personDTOObject.getEmail());
-//
-//            personDTOObject.setPerson_id(personObject.getPerson_id());
-//            return personDTOObject;
-//        }
-//        return null;
-//    }
-//
-//    public PersonDTO deletePersonbyId(Integer person_id) {
-//        PersonDTO personDTOObject = getPersonbyId(person_id);
-//
-//        if (personDTOObject != null) {
-//            Person personObject = new Person();
-//            personObject.setPerson_id(person_id);
-//            personObject.setFirstname(personDTOObject.getFirstname());
-//            personObject.setLastname(personDTOObject.getLastname());
-//            personObject.setEmail(personDTOObject.getEmail());
-//            personObject.setDescription(personDTOObject.getDescription());
-//
-//            personObject.setStreet(personDTOObject.getAddressDTO().getStreet());
-//            personObject.setCity(personDTOObject.getAddressDTO().getCity());
-//            personObject.setState(personDTOObject.getAddressDTO().getState());
-//            personObject.setZip(personDTOObject.getAddressDTO().getZip());
-//
-//            ArrayList<Integer> friends = friendshipDao.getFriendIdsForId(personObject.getPerson_id());
-//
-//            for (int i = 0; i < friends.size(); i++) {
-//                friendshipImplementation.removeFriendship(person_id, friends.get(i));
-//            }
-//            personsDao.delete(personObject);
-//            return personDTOObject;
-//        }
-//        return null;
-//    }
 }

@@ -3,9 +3,7 @@ package com.project.dto;
 import java.sql.Date;
 import java.util.List;
 
-/**
- * Created by PankajPai on 11/22/2015.
- */
+
 public class ReportDTO {
 
     private List<Integer> room;

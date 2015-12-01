@@ -2,8 +2,7 @@ package com.project.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.security.Timestamp;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Team07 on 11/21/15.
@@ -15,14 +14,17 @@ import java.util.Date;
 @Table(name = "checkin_room_mapping")
 public class CheckinRoomMapping implements Serializable{
 
-    @Id
-    @ManyToOne//(fetch = FetchType.EAGER)
+//    @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    private Integer reservation_id;
 
-    @ManyToOne//(fetch = FetchType.EAGER)
+//    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_no")
-    private Room room;
+    private Integer room_no;
+
+    @Id
+    @Column(name = "mappingId")
+    private Integer mappingId;
 
     @Column(name = "guest_count", unique = false, nullable = false)
     private Integer guest_count;
@@ -33,20 +35,12 @@ public class CheckinRoomMapping implements Serializable{
     @Column(name = "checkout_date", unique = false, nullable = false)
     private Date checkout_date;
 
-    public Reservation getReservation() {
-        return reservation;
+    public Integer getReservation_id() {
+        return reservation_id;
     }
 
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setReservation_id(Integer reservation_id) {
+        this.reservation_id = reservation_id;
     }
 
     public Integer getGuest_count() {
@@ -71,5 +65,21 @@ public class CheckinRoomMapping implements Serializable{
 
     public void setCheckout_date(Date checkout_date) {
         this.checkout_date = checkout_date;
+    }
+
+    public Integer getRoom_no() {
+        return room_no;
+    }
+
+    public void setRoom_no(Integer room_no) {
+        this.room_no = room_no;
+    }
+
+    public Integer getMappingId() {
+        return mappingId;
+    }
+
+    public void setMappingId(Integer mappingId) {
+        this.mappingId = mappingId;
     }
 }

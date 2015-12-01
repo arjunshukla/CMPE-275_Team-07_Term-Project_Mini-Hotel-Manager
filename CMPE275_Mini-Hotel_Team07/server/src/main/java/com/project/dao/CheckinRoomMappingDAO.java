@@ -1,7 +1,8 @@
 package com.project.dao;
 
-import com.project.entities.CheckinRoomMapping;
+import com.project.dto.CheckinRoomMappingDTO;
 import com.project.entities.Room;
+import com.project.entities.CheckinRoomMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
@@ -24,7 +25,9 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
 
     @Override
     public CheckinRoomMapping save(CheckinRoomMapping checkinRoomMapping) {
-        return null;
+        Integer reservation_id = (Integer)hibernateTemplate.save(checkinRoomMapping);
+        checkinRoomMapping.setReservation_id(reservation_id);
+        return checkinRoomMapping;
     }
 
     @Override
@@ -48,6 +51,18 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
     }
 
     @Override
+    public List<CheckinRoomMapping> getAllCheckins(Integer reservation_id) {
+        String query ="from CheckinRoomMapping crm where crm.reservation_id=?";
+        List<CheckinRoomMapping> checkinlist = (List<CheckinRoomMapping>)hibernateTemplate.find(query, reservation_id);
+        if(checkinlist.isEmpty()){
+            return null;
+        }
+        else{
+            return checkinlist;
+        }
+    }
+
+
     public List<Room> getOccupiedRoomsData(Date date) {
 
         String query =  "Select room from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ?";

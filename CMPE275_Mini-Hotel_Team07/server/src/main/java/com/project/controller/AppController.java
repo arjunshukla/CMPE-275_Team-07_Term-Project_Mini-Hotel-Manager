@@ -1,7 +1,9 @@
 package com.project.controller;
 
 import com.project.configuration.AppConfiguration;
+import com.project.dao.CheckinRoomMappingDAO;
 import com.project.dto.*;
+import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Friendship;
 import com.project.implementation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,7 +24,6 @@ import java.lang.String;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
-
 /**
  * Created by Team07 on 11/21/15.
  * Members: Arjun Shukla, Arpit Khare, Sneha Pimpalkar, Ankit Sharma, Tejas Pai
@@ -56,40 +59,7 @@ public class AppController extends WebMvcConfigurerAdapter {
     @Autowired
     UserImplementation userImplementation;
 
-//<<<<<<< Updated upstream
-//<<<<<<< Updated upstream
-//<<<<<<< Updated upstream
-//<<<<<<< Updated upstream
-
-   /* @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
-    public ModelAndView defaultPage() {
-
-        ModelAndView model = new ModelAndView();
-        model.addObject("title", "Spring Security + Hibernate Example");
-        model.addObject("message", "This is default page!");
-        model.setViewName("hello");
-        return model;
-
-    }*/
-
-//    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public String login(@RequestParam(value = "error", required = false) String error,
-//                              @RequestParam(value = "logout", required = false) String logout, HttpServletRequest request) {
-//
-//        ModelAndView model = new ModelAndView();
-//        if (error != null) {
-//            model.addObject("error", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
-//        }
-//
-//        if (logout != null) {
-//            model.addObject("msg", "You've been logged out successfully.");
-//        }
-//        model.setViewName("login");
-//
-//        return model;
-//
-//    }
-
+    /* Login APIs*/
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String createUser (@Valid @RequestBody UserDTO userDTO) {
         System.out.println("in /login "+userDTO.getPassword());
@@ -99,37 +69,81 @@ public class AppController extends WebMvcConfigurerAdapter {
         return result;
     }
 
-//        personDTOObject.setEmail(email);
-//        personDTOObject.setDescription(description);
-//        personDTOObject.setAddressDTO(addressDTOObject);
-//        personDTOObject.setOrg_id(org_id);
+    /* Create Room API */
 
-//        try
-//        {
-//            if (firstname.isEmpty() || lastname.isEmpty() || email.isEmpty())
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            else
-//                return new ResponseEntity<>(personImplementation.createPerson(personDTOObject), HttpStatus.OK);
-//        }
-//        catch(Exception e) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//  }
+    @RequestMapping(value="/room", method = RequestMethod.POST,  headers = {"Content-type=application/json"})
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody RoomDTO createRoom (@Valid @RequestBody RoomDTO roomDTO) {
+        return roomImplementation.createRoom(roomDTO);
+    }
 
+    /*Get Room by room_no*/
 
+    @RequestMapping(value="/room/{room_no}", method= RequestMethod.GET, headers = {"Content-type=application/json"})
+    @ResponseStatus(HttpStatus.OK)
 
-//    @Autowired
-//    PersonImplementation personImplementation;
-//
-//    @Autowired
-//    OrganizationImplementation organizationImplementation;
-//
-//    @Autowired
-//    FriendshipImplementation friendshipImplementation;
-//=======
+    public @ResponseBody RoomDTO getRoom (@Valid @PathVariable Integer room_no){
+        RoomDTO roomDTo = roomImplementation.getRoom(room_no);
+        return roomDTo;
+    }
+
+    /*Get all rooms*/
+
+    @RequestMapping(value="/room", method= RequestMethod.GET, headers = {"Content-type=application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<RoomDTO> getAllRooms(){
+        List<RoomDTO> roomDTO = roomImplementation.getAllRooms();
+        return roomDTO;
+    }
+
+    /*Update a room*/
+
+//    @RequestMapping(value="/room", method= RequestMethod.PUT, headers = {"Content-type=application/json"})
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody RoomDTO updateRoom(@Valid @RequestBody RoomDTO roomDTO){
+//        return roomImplementation.updateRoom(roomDTO);
+//    }
+
+    /*4. Guest service
+        a. A service agent can check in guests.
+        b. If a guest does not have a reservation, the service agent can create a room order on the fly.
+        c. If a guest has a reservation, he must provide the reservation ID and driver license.
+           The service agent will look up the reservation by the reservation ID, and then turn the reservation to a room order.
+        d. The service agent can make modifications to a reservation when turning it into a room order,
+           including assign/reassign and add/remove rooms from the order/reservation.
+        e. The service agent can also optionally apply a discount (10% to 30%) to the whole order.
+           An admin can apply a discount upto 100%.
+        f. Upon checking, the guest must also provide the # of total persons to stay in each room.
+        g. The guest can check out on the planned checkout date or sooner.
+           The bill will be charged on a daily basis; i.e., once checked in, it’s charged for at least a day.
+        h. Upon checkout, a receipt with the billing details (room charges, discounts, duration of the stay, etc) will be mailed to the guest.
+    * */
+
+    /* Check If Reservation exists for a guest.
+    Also check the checkinRoomMapping to verify the number of rooms booked on one reservation Id*/
+
+    @RequestMapping(value = "/reservationcheck/{reservation_token}/{license_no}", method=RequestMethod.POST, headers="Content-Type=application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<CheckinRoomMappingDTO> reservationCheck(@Valid @PathVariable("reservation_token") String reservation_token, @PathVariable("license_no") String license_no){
+        Integer guest_id = guestImplementation.getGuestByLicenseNo(license_no);
+        //ReservationDTO reservationDTO = reservationImplementation.getReservationById(reservation_token, guest_id);
+
+        Integer reservation_id = reservationImplementation.getReservationById(reservation_token,guest_id);
+        List<CheckinRoomMappingDTO> checkinRoomMappingDTOs = checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservation_id);
+        return checkinRoomMappingDTOs;
+    }
+
+    /* Check in for the guest */
+
+    @RequestMapping(value = "/checkinGuest", method=RequestMethod.POST, headers="Content-Type=application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody CheckinRoomMappingDTO guestCheckin (@Valid @RequestBody CheckinRoomMappingDTO checkinRoomMappingDTO) {
+        return checkinRoomMappingImplementation.checkin(checkinRoomMappingDTO);
+    }
+
     /*
-   Implementation of report API
-    */
+      Implementation of report API
+       */
     @RequestMapping(value = "/report/{reportDate}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> getRoomsReport(@Valid @PathVariable String reportDate){
@@ -146,7 +160,5 @@ public class AppController extends WebMvcConfigurerAdapter {
         }
 
     }
-
-
 
 }

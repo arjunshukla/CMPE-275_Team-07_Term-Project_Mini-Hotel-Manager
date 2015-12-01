@@ -20,4 +20,5 @@ public interface InterfaceForCheckinRoomMapping {
     public CheckinRoomMapping getCheckinByReservationId(Integer reservation_id);
     public List<CheckinRoomMapping> getAllCheckins();
     public List<Room> getOccupiedRoomsData(Date d);
+    List<CheckinRoomMapping> getAllCheckins(Integer reservation_id);
 }

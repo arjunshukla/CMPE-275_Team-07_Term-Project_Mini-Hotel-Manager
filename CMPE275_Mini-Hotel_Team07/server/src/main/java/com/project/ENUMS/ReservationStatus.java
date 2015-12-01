@@ -7,7 +7,20 @@ package com.project.ENUMS;
  */
 
 public enum ReservationStatus {
-    R, C
+    R("R"),C("C");
+    private String type;
+    private ReservationStatus(String type){this.type=type;}
+    public static ReservationStatus getEnum(String code){
+        switch(code){
+            case "R": return R;
+
+            case "C" : return  C;
+
+
+        }
+        return  null;
+    }
+
     // R - reserved
     // C- cancelled
 }

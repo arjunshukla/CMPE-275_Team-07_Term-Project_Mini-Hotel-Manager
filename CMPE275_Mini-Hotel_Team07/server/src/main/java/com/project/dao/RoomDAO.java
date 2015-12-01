@@ -21,12 +21,14 @@ public class RoomDAO implements InterfaceForRoom {
 
     @Override
     public Room save(Room room) {
-        return null;
+        Integer room_id = (Integer)hibernateTemplate.save(room);
+        return room;
     }
 
     @Override
-    public void update(Room room) {
-
+    public Room update(Room room) {
+        Integer room_id = (Integer)hibernateTemplate.save(room);
+        return room;
     }
 
     @Override
@@ -35,12 +37,28 @@ public class RoomDAO implements InterfaceForRoom {
     }
 
     @Override
-    public Room getRoomByNo(Integer roomNo) {
-        return null;
+    public Room getRoomByNo(Integer room_no) {
+        String query = "from Room r where r.room_no = ?";
+        @SuppressWarnings("unchecked")
+        List<Room> room = (List<Room>) hibernateTemplate.find(query,room_no);
+        if (room.isEmpty()) {
+            return null;
+        } else {
+            System.out.println();
+            return room.get(0);
+        }
     }
 
     @Override
     public List<Room> getAllRooms() {
-        return null;
+        String query = "from Room r";
+        List<Room> roomsList = (List<Room>) hibernateTemplate.find(query);
+        if(roomsList.isEmpty()){
+            return null;
+        }
+        else{
+            return roomsList;
+        }
+
     }
 }

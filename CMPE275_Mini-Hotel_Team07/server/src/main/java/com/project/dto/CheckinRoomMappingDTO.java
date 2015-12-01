@@ -1,7 +1,6 @@
 package com.project.dto;
 
-import javax.persistence.Column;
-import java.security.Timestamp;
+import java.sql.Date;
 
 /**
  * Created by Team11 on 11/4/15.
@@ -9,12 +8,13 @@ import java.security.Timestamp;
  * CheckinRoomMapping Table Data Transaction Object Class
  */
 
-public class ChekinRoomMappingDTO {
+public class CheckinRoomMappingDTO {
     private Integer reservation_id;
     private Integer room_no;
     private Integer guest_count;
-    private Timestamp checkin_date;
-    private Timestamp checkout_date;
+    private Date checkin_date;
+    private Date checkout_date;
+    private Integer mappingId;
 
     public Integer getReservation_id() {
         return reservation_id;
@@ -40,19 +40,27 @@ public class ChekinRoomMappingDTO {
         this.guest_count = guest_count;
     }
 
-    public Timestamp getCheckin_date() {
+    public Date getCheckin_date() {
         return checkin_date;
     }
 
-    public void setCheckin_date(Timestamp checkin_date) {
+    public void setCheckin_date(Date checkin_date) {
         this.checkin_date = checkin_date;
     }
 
-    public Timestamp getCheckout_date() {
+    public Date getCheckout_date() {
         return checkout_date;
     }
 
-    public void setCheckout_date(Timestamp checkout_date) {
+    public void setCheckout_date(Date checkout_date) {
         this.checkout_date = checkout_date;
+    }
+
+    public Integer getMappingId() {
+        return mappingId;
+    }
+
+    public void setMappingId(Integer mappingId) {
+        this.mappingId = mappingId;
     }
 }

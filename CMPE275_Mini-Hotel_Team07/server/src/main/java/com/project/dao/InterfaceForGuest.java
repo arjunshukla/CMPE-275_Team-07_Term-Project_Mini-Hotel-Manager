@@ -17,7 +17,7 @@ public interface InterfaceForGuest {
 
     public Guest getGuestById(Integer guestID);
 
-    Guest getGuestByEmail(String email);
+   public Guest getGuestByEmail(String email);
 
-    Guest getGuestByLicenseNo(Integer licenseNo);
+   public Guest getGuestByLicenseNo(String licenseNo);
 }

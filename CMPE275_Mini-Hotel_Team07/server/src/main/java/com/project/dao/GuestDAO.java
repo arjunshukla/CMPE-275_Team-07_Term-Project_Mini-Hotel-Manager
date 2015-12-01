@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * Created by Team07 on 11/21/15.
@@ -48,7 +49,14 @@ public class GuestDAO implements InterfaceForGuest {
     }
 
     @Override
-    public Guest getGuestByLicenseNo(Integer licenseNo) {
-        return null;
+    public Guest getGuestByLicenseNo(String licenseNo) {
+    String query = "from Guest g where g.license_no=?";
+    List<Guest> guestList = (List<Guest>)hibernateTemplate.find(query,licenseNo);
+        if(guestList.isEmpty()){
+            return null;
+        }
+        else{
+            return guestList.get(0);
+        }
     }
 }

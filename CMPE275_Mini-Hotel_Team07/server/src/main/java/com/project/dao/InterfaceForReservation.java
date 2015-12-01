@@ -15,6 +15,6 @@ public interface InterfaceForReservation {
     Reservation save(Reservation reservation);
     public void update(Reservation reservation);
     public void delete(Reservation reservation);
-    public Reservation getReservationById(Integer reservationId);
+    public Reservation getReservationByLicense_Token(String reservation_token, Integer guest_Id);
     public List<Reservation> getAllReservations();
 }

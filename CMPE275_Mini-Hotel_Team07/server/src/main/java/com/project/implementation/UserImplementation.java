@@ -26,7 +26,7 @@ public class UserImplementation {
 //
 //    @Autowired
 //    FriendshipImplementation friendshipImplementation;
-
+//
 //
 //	 /*  Create Person*/
 //
@@ -60,6 +60,7 @@ public class UserImplementation {
 //        personDTObject.setPerson_id(personObject.getPerson_id());
 //        return personDTObject;
 //    }
+//
     @Transactional
       public String getUserByName(UserDTO userDTO)
     {

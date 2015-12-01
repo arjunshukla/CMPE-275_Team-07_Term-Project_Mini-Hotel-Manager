@@ -19,8 +19,5 @@ public interface InterfaceForUser {
     public User getUserByName(String name);
     public User getUserByIdAndUserName(Integer userId, String username);
     public List<User> getAllUsers();
-
-    String loginUser(User user);
-
-    // getuserbyusername
+    public String loginUser(User user);
 }

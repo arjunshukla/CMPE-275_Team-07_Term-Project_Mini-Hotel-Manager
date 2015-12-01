@@ -3,8 +3,8 @@ package com.project.entities;
 import com.project.ENUMS.ReservationStatus;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.sql.Date;
+
 
 /**
  * Created by Team07 on 11/21/15.
@@ -20,9 +20,9 @@ public class Reservation {
     @Column(name = "reservation_id", unique = true, nullable = false)
     private Integer reservation_id;
 
-    @ManyToOne//(fetch = FetchType.EAGER)
+    //@OneToOne//(fetch = FetchType.EAGER)
     @JoinColumn(name = "guest_id")
-    private Guest guest;
+    private Integer guest_id;
 
     @Column(name = "reservation_token", unique = true, nullable = false)
     private String reservation_token;
@@ -42,12 +42,12 @@ public class Reservation {
         this.reservation_id = reservation_id;
     }
 
-    public Guest getGuest() {
-        return guest;
+    public Integer getGuest_id() {
+        return guest_id;
     }
 
-    public void setGuest(Guest guest) {
-        this.guest = guest;
+    public void setGuest_id(Integer guest_id) {
+        this.guest_id = guest_id;
     }
 
     public String getReservation_token() {

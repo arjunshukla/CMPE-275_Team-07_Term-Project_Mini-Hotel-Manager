@@ -45,6 +45,7 @@ public class AppConfiguration {
     public GuestImplementation getGuestImplementation(){
         return new GuestImplementation();
     }
+
     @Bean
     public ReservationImplementation getReservationImplementation(){
         return new ReservationImplementation();
@@ -76,12 +77,6 @@ public class AppConfiguration {
         return new FriendshipImplementation();
     }
 
-    /*
-    @Bean
-    public ReportImplementation getReportImplementation(){
-        return new ReportImplementation();
-    }
-*/
     /*
      * Bean For DAO
      */
@@ -143,13 +138,8 @@ public class AppConfiguration {
         return new FriendshipDAO();
     }
 
-    /*
-    @Bean
-    public InterfaceForReport getReportDao(){
-        return new ReportDAO();
-    }
 
-*/
+
 
 
     public DataSource dataSource() {
