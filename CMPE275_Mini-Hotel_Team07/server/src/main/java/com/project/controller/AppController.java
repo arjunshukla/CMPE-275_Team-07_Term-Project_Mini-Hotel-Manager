@@ -246,26 +246,38 @@ public class AppController extends WebMvcConfigurerAdapter {
     /* Check in a Guest, updates the CheckinRoomMapping and Rooms tables */
 
     @RequestMapping(value="/checkinGuest", method=RequestMethod.PUT, headers="Content-Type=application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void checkinGuest(@Valid @RequestBody List<CheckinRoomMappingDTO> crmDTOList){
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> checkinGuest(@Valid @RequestBody List<CheckinRoomMappingDTO> crmDTOList) {
 
         checkinRoomMappingImplementation.checkinGuest(crmDTOList);
-        for(CheckinRoomMappingDTO crm: crmDTOList){
-            RoomDTO roomDTO = roomImplementation.getRoom(crm.getRoom_no());
-            roomDTO.setRoom_status(RoomStatus.NA);
-            roomImplementation.updateRoom(roomDTO);
+        try {
+            for (CheckinRoomMappingDTO crm : crmDTOList) {
+                RoomDTO roomDTO = roomImplementation.getRoom(crm.getRoom_no());
+                roomDTO.setRoom_status(RoomStatus.NA);
+                roomImplementation.updateRoom(roomDTO);
+
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     /* CheckOut a Guest, updates the Rooms table */
 
     @RequestMapping(value="/checkoutGuest/{room_no}", method=RequestMethod.PUT, headers="Content-Type=application/json")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void checkoutGuest(@Valid @PathVariable("room_no") Integer room_no) {
+    public @ResponseBody ResponseEntity<?> checkoutGuest(@Valid @PathVariable("room_no") Integer room_no) {
         RoomDTO roomDTO = roomImplementation.getRoom(room_no);
+        try{
             roomDTO.setRoom_status(RoomStatus.A);
             roomImplementation.updateRoom(roomDTO);
+        } catch(Exception e){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<Object>(HttpStatus.OK);
+        }
+
 
     /*
       Implementation of report API
