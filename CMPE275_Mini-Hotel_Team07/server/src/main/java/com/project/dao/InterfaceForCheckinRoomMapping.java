@@ -1,10 +1,13 @@
 package com.project.dao;
 
+import com.project.ENUMS.RoomType;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Room;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -22,4 +25,5 @@ public interface InterfaceForCheckinRoomMapping {
 //    public List<CheckinRoomMapping> getAllCheckins();
     public List<Room> getOccupiedRoomsData(Date d);
     List<CheckinRoomMapping> getAllCheckins(ReservationDTO reservationDTO);
+    public ArrayList<HashMap<String, String>> getAvailableRooms(Date checkin_date, Date checkout_date, Integer no_of_rooms, RoomType room_type);
 }

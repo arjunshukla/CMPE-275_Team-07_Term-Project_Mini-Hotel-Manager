@@ -14,6 +14,51 @@ public class GuestDTO{
     private String guest_email;
     private String license_no;
     private Integer address_id;
+    private String street;
+    private String city;
+    private String state;
+    private Integer zip;
+    private String room_no_selected;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Integer getZip() {
+        return zip;
+    }
+
+    public void setZip(Integer zip) {
+        this.zip = zip;
+    }
+
+    public String getRoom_no_selected() {
+        return room_no_selected;
+    }
+
+    public void setRoom_no_selected(String room_no_selected) {
+        this.room_no_selected = room_no_selected;
+    }
 
     public Integer getGuest_id() {
         return guest_id;

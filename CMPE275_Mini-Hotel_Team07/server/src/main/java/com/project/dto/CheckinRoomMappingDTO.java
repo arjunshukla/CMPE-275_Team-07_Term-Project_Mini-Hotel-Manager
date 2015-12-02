@@ -1,5 +1,7 @@
 package com.project.dto;
 
+import com.project.ENUMS.RoomType;
+
 import java.sql.Date;
 
 /**
@@ -15,6 +17,24 @@ public class CheckinRoomMappingDTO {
     private Date checkin_date;
     private Date checkout_date;
     private Integer mappingId;
+    private Integer number_of_rooms;
+    private RoomType room_type;
+
+    public RoomType getRoom_type() {
+        return room_type;
+    }
+
+    public void setRoom_type(RoomType room_type) {
+        this.room_type = room_type;
+    }
+
+    public Integer getNumber_of_rooms() {
+        return number_of_rooms;
+    }
+
+    public void setNumber_of_rooms(Integer number_of_rooms) {
+        this.number_of_rooms = number_of_rooms;
+    }
 
     public Integer getReservation_id() {
         return reservation_id;

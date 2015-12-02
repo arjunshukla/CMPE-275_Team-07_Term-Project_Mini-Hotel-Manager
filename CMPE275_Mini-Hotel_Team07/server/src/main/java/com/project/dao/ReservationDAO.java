@@ -21,7 +21,9 @@ public class ReservationDAO implements InterfaceForReservation {
 
     @Override
     public Reservation save(Reservation reservation) {
-        return null;
+        Integer res_id = (Integer)hibernateTemplate.save(reservation);
+        reservation.setReservation_id(res_id);
+        return reservation;
     }
 
     @Override

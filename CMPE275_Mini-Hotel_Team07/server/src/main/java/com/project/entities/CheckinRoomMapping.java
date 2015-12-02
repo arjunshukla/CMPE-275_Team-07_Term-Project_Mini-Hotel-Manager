@@ -23,6 +23,7 @@ public class CheckinRoomMapping implements Serializable{
     private Integer room_no;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mappingId")
     private Integer mappingId;
 

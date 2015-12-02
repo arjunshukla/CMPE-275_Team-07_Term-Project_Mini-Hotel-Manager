@@ -1,21 +1,21 @@
 package com.project.implementation;
-import com.project.dao.InterfaceForReservation;
-import com.project.dto.ReportDTO;
+
+import com.project.ENUMS.RoomType;
 import com.project.dao.InterfaceForCheckinRoomMapping;
+import com.project.dao.InterfaceForReservation;
 import com.project.dto.CheckinRoomMappingDTO;
+import com.project.dto.ReportDTO;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.project.entities.Room;
-import javax.transaction.Transactional;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.transaction.Transactional;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,6 +31,27 @@ public class CheckinRoomMappingImplementation {
     InterfaceForCheckinRoomMapping checkinRoomMappingDao;
     @Autowired
     InterfaceForReservation reservationDao;
+
+    public ArrayList<HashMap<String, String>> getAvailableReservations(CheckinRoomMappingDTO checkinDTO) {
+
+        Date checkin_date = checkinDTO.getCheckin_date();
+        Date checkout_date = checkinDTO.getCheckout_date();
+        Integer no_of_rooms = checkinDTO.getNumber_of_rooms();
+        RoomType room_type = checkinDTO.getRoom_type();
+
+        System.out.println("checkin_date: " + checkin_date);
+        System.out.println("checkout_date: " + checkout_date);
+        System.out.println("no_of_rooms: " + no_of_rooms);
+        System.out.println("room_type: " + room_type);
+        ArrayList<HashMap<String, String>> checkinRoomMapping =
+                checkinRoomMappingDao.getAvailableRooms(checkin_date, checkout_date, no_of_rooms, room_type);
+        // ChekinRoomMappingDTO checkinAvailable = new ChekinRoomMappingDTO();
+        //checkinAvailable.setNumber_of_rooms(checkinRoomMapping.size());
+        return checkinRoomMapping;
+
+    }
+
+
 //
 //    /*  Create Checkin */
 //

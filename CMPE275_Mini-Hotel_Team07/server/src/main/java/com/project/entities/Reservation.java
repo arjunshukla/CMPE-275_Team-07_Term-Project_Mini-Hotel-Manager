@@ -17,6 +17,7 @@ import java.sql.Date;
 public class Reservation {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id", unique = true, nullable = false)
     private Integer reservation_id;
 

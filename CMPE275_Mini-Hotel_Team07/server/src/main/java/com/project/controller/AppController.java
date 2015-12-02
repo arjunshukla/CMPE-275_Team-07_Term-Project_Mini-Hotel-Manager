@@ -2,11 +2,9 @@ package com.project.controller;
 
 import com.project.ENUMS.RoomStatus;
 import com.project.configuration.AppConfiguration;
-import com.project.dao.CheckinRoomMappingDAO;
 import com.project.dto.*;
-import com.project.entities.CheckinRoomMapping;
-import com.project.entities.Friendship;
 import com.project.implementation.*;
+import com.project.dto.CheckinRoomMappingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,16 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.String;
+
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 /**
  * Created by Team07 on 11/21/15.
  * Members: Arjun Shukla, Arpit Khare, Sneha Pimpalkar, Ankit Sharma, Tejas Pai
@@ -70,7 +64,28 @@ public class AppController extends WebMvcConfigurerAdapter {
         return result;
     }
 
-    /* Create Room API */
+    /* Search for available rooms
+
+     * checkin_date
+     * checkout_date
+     * no_of_rooms
+     * room_type
+
+   */
+
+    @RequestMapping(value = "/searchRoomAvailability", method = RequestMethod.POST,
+            headers="Content-Type=application/json")
+
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    ArrayList<HashMap<String, String>> fetchAvailableReservations
+            (@Valid @RequestBody CheckinRoomMappingDTO checkinDTO){
+        System.out.println(checkinDTO.getCheckin_date());
+        System.out.println(checkinDTO.getCheckout_date());
+//        String s = checkinDTO.
+        ArrayList<HashMap<String, String>> checkingDTO = checkinRoomMappingImplementation.getAvailableReservations(checkinDTO);
+        return checkingDTO;
+    }
 
     @RequestMapping(value="/room", method = RequestMethod.POST,  headers = {"Content-type=application/json"})
     // @ResponseStatus(HttpStatus.CREATED)
@@ -86,6 +101,43 @@ public class AppController extends WebMvcConfigurerAdapter {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    /*
+    Make reservation
+
+     */
+
+    @RequestMapping(value = "/makeReservations", method = RequestMethod.POST
+            ,headers="Content-Type=application/json")
+
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    String makeReservations(@Valid @RequestBody GuestDTO guestDTO,
+                            @Valid @RequestParam(value = "checkin_date") String checkin_date,
+                            @Valid @RequestParam(value = "checkout_date") String checkout_date,
+                            @Valid @RequestParam(value = "no_of_rooms") String no_of_rooms){
+
+        Date converted_checkin_date = Date.valueOf(checkin_date);
+        Date converted_checkout_date = Date.valueOf(checkout_date);
+        Integer no_of_rooms_Int = Integer.parseInt(no_of_rooms);
+
+        System.out.println("rooms selected: "+guestDTO.getRoom_no_selected());
+
+        System.out.println(guestDTO.getGuest_name());
+        System.out.println(guestDTO.getGuest_email());
+        System.out.println(guestDTO.getLicense_no());
+        System.out.println(guestDTO.getStreet());
+        System.out.println(guestDTO.getCity());
+        System.out.println(guestDTO.getState());
+        System.out.println(guestDTO.getZip());
+        System.out.println(converted_checkin_date);
+        System.out.println(converted_checkout_date);
+        System.out.println(no_of_rooms_Int);
+
+        return reservationImplementation.makeReservation(guestDTO,no_of_rooms_Int,converted_checkin_date,converted_checkout_date);
+
+//        return reservationDTO;
     }
 
     /*Delete a room*/

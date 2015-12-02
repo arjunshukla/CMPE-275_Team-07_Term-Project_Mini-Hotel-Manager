@@ -13,6 +13,7 @@ import javax.persistence.*;
 public class Guest {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id", unique = true, nullable = false)
     private Integer guest_id;
 
