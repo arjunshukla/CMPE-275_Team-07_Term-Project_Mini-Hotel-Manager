@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -138,24 +139,97 @@ public class CheckinRoomMappingImplementation {
     }
 
     @Transactional
-    public ReportDTO getOccupiedRooms(Date date) {
-        ReportDTO reportDTOObject = new ReportDTO();
+    public HashMap<String, List<Integer>> getOccupiedRooms(Date date) {
 
-        List<Room> roomReportObject;
-        roomReportObject = ReportDaoObject.getOccupiedRoomsData(date);
+        // create a java calendar instance
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date currentDate = calendar.getTime();
 
-        if (roomReportObject != null) {
-            List<Integer> roomIntegerList = new ArrayList<Integer>();
+        Date todayDate = new Date(currentDate.getTime());
 
-            for (Room room : roomReportObject) {
-                roomIntegerList.add(room.getRoom_no());
+        HashMap<String, List<Integer>> map = new HashMap<String, List<Integer>>();
+        List<Integer> roomReportList;
+        List<Integer> totalRooms = ReportDaoObject.getTotalRooms();
+        List<Integer> notOccupiedRooms = new ArrayList();
+
+        List<Integer> reservedRoomIntegerList = new ArrayList<Integer>();
+        List<Integer> occupiedRoomIntegerList = new ArrayList<Integer>();
+
+        System.out.println("Todays date is: " + todayDate);
+        System.out.println("Date date is: " + date);
+
+
+        if(todayDate.toString().equalsIgnoreCase(date.toString())) {// checks if current date
+            // Occupied Rooms
+            System.out.println("Im am here in today");
+            roomReportList = ReportDaoObject.getOccupiedRoomsData(date);
+            map.put("occupiedrooms", roomReportList);
+            Integer occupiedCount = roomReportList.size();
+
+
+
+            //Reserved rooms
+            roomReportList = ReportDaoObject.getReservationData(date);
+            map.put("reservedrooms", roomReportList);
+            Integer reservedCount = roomReportList.size();
+
+
+            // Available rooms
+
+            Integer notOccupied = totalRooms.size() - occupiedCount - reservedCount;
+            notOccupiedRooms.add(notOccupied);
+
+            map.put("notOccupiedCount", notOccupiedRooms);
+
+            return map;
+        }
+        else if (date.after(todayDate)) { // checks if future date
+            roomReportList = ReportDaoObject.getReservationData(date);
+            System.out.println("Im am here in after");
+            if (roomReportList != null) {
+
+                map.put("reservedrooms", roomReportList);
+
+
+                // Calculate not occupied rooms
+               // System.out.println("Total rooms" + totalRooms.size());
+
+
+                Integer notOccupied = totalRooms.size() - roomReportList.size();
+                notOccupiedRooms.add(notOccupied);
+
+                map.put("notOccupiedCount", notOccupiedRooms);
+
+                return map;
+
+            } else {
+                return null;
             }
 
-            reportDTOObject.setRooms(roomIntegerList);
-            return reportDTOObject;
+        } else if (date.before(todayDate)) {// checks if past date
+            System.out.println("Im am here in before");
+
+            roomReportList = ReportDaoObject.getOccupiedRoomsData(date);
+
+            if (roomReportList != null) {
+                // Occupied Rooms
+                roomReportList = ReportDaoObject.getOccupiedRoomsData(date);
+                map.put("occupiedrooms", roomReportList);
+                Integer occupiedCount = roomReportList.size();
+
+                // Available rooms
+                Integer notOccupied = totalRooms.size() - occupiedCount;
+                notOccupiedRooms.add(notOccupied);
+
+                map.put("notOccupiedCount", notOccupiedRooms);
+
+                return map;
+
+            } else {
+                return null;
+            }
         }
-        else{
-            return null;
-        }
+        return map;
+
     }
 }

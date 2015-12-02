@@ -108,13 +108,47 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
         }
     }
 
-    public List<Room> getOccupiedRoomsData(Date date) {
+    public List<Integer> getOccupiedRoomsData(Date date) {
 
-        String query =  "Select room from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ?";
+        String query =  "Select Distinct room_no from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ? AND guest_count != 0 Order by room_no";
 
         //@SuppressWarnings("unchecked")
-        List<Room> listOfOccupiedRooms = (List<Room>) hibernateTemplate.find(query,date,date);
-        System.out.println(listOfOccupiedRooms.size());
+        List<Integer> listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query,date,date);
+        //System.out.println(listOfOccupiedRooms.size());
+        if (listOfOccupiedRooms.isEmpty()) {
+            return null;
+        } else {
+            return listOfOccupiedRooms;
+        }
+    }
+
+
+    @Override
+    public List<Integer> getReservationData(Date date) {
+
+        String query =  "Select Distinct room_no from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ? AND guest_count = 0 order by room_no";
+
+        //@SuppressWarnings("unchecked")
+        List<Integer> listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query,date,date);
+        //System.out.println(listOfOccupiedRooms.size());
+        if (listOfOccupiedRooms.isEmpty()) {
+            return null;
+        } else {
+            return listOfOccupiedRooms;
+        }
+    }
+
+
+    @Override
+    public List<Integer> getTotalRooms() {
+
+        String query =  "Select room_no from Room";
+
+        //@SuppressWarnings("unchecked")
+        List<Integer> listOfOccupiedRooms = new ArrayList();
+
+        listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query);
+        //System.out.println(listOfOccupiedRooms.size());
         if (listOfOccupiedRooms.isEmpty()) {
             return null;
         } else {

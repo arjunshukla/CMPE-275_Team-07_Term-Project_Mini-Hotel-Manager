@@ -276,13 +276,13 @@ public class AppController extends WebMvcConfigurerAdapter {
         Date date= Date.valueOf(reportDate);
 //>>>>>>> Stashed changes
 
-        ReportDTO reportDTO = checkinRoomMappingImplementation.getOccupiedRooms(date);
+        HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
 
-        if(reportDTO == null){
+        if(map == null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         else{
-            return new ResponseEntity<>(reportDTO,HttpStatus.OK);
+            return new ResponseEntity<>(map,HttpStatus.OK);
         }
 
     }

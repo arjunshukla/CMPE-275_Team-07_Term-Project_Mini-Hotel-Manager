@@ -23,7 +23,10 @@ public interface InterfaceForCheckinRoomMapping {
     public void delete(CheckinRoomMapping checkinRoomMapping);
     public List<CheckinRoomMapping> getCheckinByReservationId(Integer reservation_id);
 //    public List<CheckinRoomMapping> getAllCheckins();
-    public List<Room> getOccupiedRoomsData(Date d);
+    public List<Integer> getOccupiedRoomsData(Date d);
+    List<Integer> getReservationData(Date date);
+    List<Integer> getTotalRooms();
+
     List<CheckinRoomMapping> getAllCheckins(ReservationDTO reservationDTO);
     public ArrayList<HashMap<String, String>> getAvailableRooms(Date checkin_date, Date checkout_date, Integer no_of_rooms, RoomType room_type);
 }
