@@ -50,4 +50,16 @@ public class ReservationDAO implements InterfaceForReservation {
     public List<Reservation> getAllReservations() {
         return null;
     }
+
+    @Override
+    public Reservation getReservationById(Integer reservation_id) {
+        String query = "from Reservation where reservation_id =?";
+        List<Reservation> reservationList = (List<Reservation>) hibernateTemplate.find(query,reservation_id);
+        if(reservationList.isEmpty()){
+            return null;
+        }
+        else{
+            return reservationList.get(0);
+        }
+    }
 }

@@ -22,15 +22,26 @@ public class ReservationImplementation {
     InterfaceForReservation reservationDAO;
 
     @Transactional
-    public Integer getReservationById(String reservation_token, Integer guest_Id){
+    public ReservationDTO getReservationById(String reservation_token, Integer guest_Id){
       ReservationDTO reservationDTO = new ReservationDTO();
         Reservation reservationEntityObject = reservationDAO.getReservationByLicense_Token(reservation_token, guest_Id);
         if(reservationEntityObject != null){
             reservationDTO.setReservation_id(reservationEntityObject.getReservation_id());
-            return reservationDTO.getReservation_id();
+            reservationDTO.setGuest_id(reservationEntityObject.getGuest_id());
+            reservationDTO.setReservation_token(reservationEntityObject.getReservation_token());
+            reservationDTO.setReservation_date(reservationEntityObject.getReservation_date());
+            reservationDTO.setReservation_status(reservationEntityObject.getReservation_status());
+            return reservationDTO;//.getReservation_id();
         }
         else{
             return null;
         }
+    }
+
+    public boolean isValidReservation(Integer reservation_id) {
+         if(reservationDAO.getReservationById(reservation_id) != null){
+             return true;
+         }
+        return false;
     }
 }

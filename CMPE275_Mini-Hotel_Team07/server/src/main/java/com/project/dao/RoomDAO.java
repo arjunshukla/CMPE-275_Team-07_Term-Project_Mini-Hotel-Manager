@@ -26,14 +26,14 @@ public class RoomDAO implements InterfaceForRoom {
     }
 
     @Override
-    public Room update(Room room) {
-        Integer room_id = (Integer)hibernateTemplate.save(room);
-        return room;
+    public void update(Room room) {
+        hibernateTemplate.update(room);
     }
 
     @Override
-    public void delete(Room room) {
-
+    public void delete(Integer room_no) {
+        String query ="delete from rooms where room_no=?";
+        hibernateTemplate.delete(query);
     }
 
     @Override

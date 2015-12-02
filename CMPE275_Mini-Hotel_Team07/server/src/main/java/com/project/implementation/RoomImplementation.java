@@ -90,7 +90,7 @@ public class RoomImplementation {
     /*Update a room*/
 
     @Transactional
-    public RoomDTO updateRoom(RoomDTO roomDTO){
+    public void updateRoom(RoomDTO roomDTO){
         Room roomEntityObject = new Room();
         try
         {
@@ -105,9 +105,14 @@ public class RoomImplementation {
             e.printStackTrace();
         }
 
-        roomEntityObject = roomDAO.update(roomEntityObject);
-        return roomDTO;
+        roomDAO.update(roomEntityObject);
 
+    }
+
+    /*Delete a room*/
+    @Transactional
+    public void deleteRoom(Integer room_no) {
+        roomDAO.delete(room_no);
     }
 
 }

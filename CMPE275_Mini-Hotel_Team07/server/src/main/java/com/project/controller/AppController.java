@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.ENUMS.RoomStatus;
 import com.project.configuration.AppConfiguration;
 import com.project.dao.CheckinRoomMappingDAO;
 import com.project.dto.*;
@@ -72,19 +73,53 @@ public class AppController extends WebMvcConfigurerAdapter {
     /* Create Room API */
 
     @RequestMapping(value="/room", method = RequestMethod.POST,  headers = {"Content-type=application/json"})
-    @ResponseStatus(HttpStatus.CREATED)
-    public @ResponseBody RoomDTO createRoom (@Valid @RequestBody RoomDTO roomDTO) {
-        return roomImplementation.createRoom(roomDTO);
+    // @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createRoom(@Valid @RequestBody RoomDTO roomDTO) {
+        RoomDTO room = roomImplementation.getRoom(roomDTO.getRoom_no());
+        try{
+            if(room != null){
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }else{
+                return new ResponseEntity<>(roomImplementation.createRoom(roomDTO),HttpStatus.CREATED);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    /*Delete a room*/
+    @RequestMapping(value="/room/{room_no}", method = RequestMethod.DELETE,  headers = {"Content-type=application/json"})
+    // @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> deleteRoom(@Valid @PathVariable("room_no") Integer room_no) {
+        RoomDTO room = roomImplementation.getRoom(room_no);
+        try {
+            if (room == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                roomImplementation.deleteRoom(room_no);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     /*Get Room by room_no*/
 
     @RequestMapping(value="/room/{room_no}", method= RequestMethod.GET, headers = {"Content-type=application/json"})
-    @ResponseStatus(HttpStatus.OK)
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getRoom (@Valid @PathVariable Integer room_no){
+        try{
+            if(room_no == null){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else{
+                return new ResponseEntity<>(roomImplementation.getRoom(room_no),HttpStatus.OK);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
 
-    public @ResponseBody RoomDTO getRoom (@Valid @PathVariable Integer room_no){
-        RoomDTO roomDTo = roomImplementation.getRoom(room_no);
-        return roomDTo;
     }
 
     /*Get all rooms*/
@@ -99,47 +134,86 @@ public class AppController extends WebMvcConfigurerAdapter {
     /*Update a room*/
 
 //    @RequestMapping(value="/room", method= RequestMethod.PUT, headers = {"Content-type=application/json"})
-//    @ResponseStatus(HttpStatus.OK)
-//    public @ResponseBody RoomDTO updateRoom(@Valid @RequestBody RoomDTO roomDTO){
-//        return roomImplementation.updateRoom(roomDTO);
+//    //@ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody HttpStatus updateRoom(@Valid @RequestBody RoomDTO roomDTO){
+//        Integer room_no = roomDTO.getRoom_no();
+//        RoomDTO room = roomImplementation.getRoom(room_no);
+//        if(room == null){
+//           return HttpStatus.NOT_FOUND;
+//        }else{
+//            roomImplementation.updateRoom(roomDTO);
+//            return HttpStatus.OK;
+//        }
+//
 //    }
 
-    /*4. Guest service
-        a. A service agent can check in guests.
-        b. If a guest does not have a reservation, the service agent can create a room order on the fly.
-        c. If a guest has a reservation, he must provide the reservation ID and driver license.
-           The service agent will look up the reservation by the reservation ID, and then turn the reservation to a room order.
-        d. The service agent can make modifications to a reservation when turning it into a room order,
-           including assign/reassign and add/remove rooms from the order/reservation.
-        e. The service agent can also optionally apply a discount (10% to 30%) to the whole order.
-           An admin can apply a discount upto 100%.
-        f. Upon checking, the guest must also provide the # of total persons to stay in each room.
-        g. The guest can check out on the planned checkout date or sooner.
-           The bill will be charged on a daily basis; i.e., once checked in, it’s charged for at least a day.
-        h. Upon checkout, a receipt with the billing details (room charges, discounts, duration of the stay, etc) will be mailed to the guest.
-    * */
+    @RequestMapping(value="/room", method= RequestMethod.PUT, headers = {"Content-type=application/json"})
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updateRoom(@Valid @RequestBody RoomDTO roomDTO){
+        Integer room_no = roomDTO.getRoom_no();
+        RoomDTO room = roomImplementation.getRoom(room_no);
+        try{
+            if(room == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            else{
+                roomImplementation.updateRoom(roomDTO);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
     /* Check If Reservation exists for a guest.
     Also check the checkinRoomMapping to verify the number of rooms booked on one reservation Id*/
 
-    @RequestMapping(value = "/reservationcheck/{reservation_token}/{license_no}", method=RequestMethod.POST, headers="Content-Type=application/json")
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody List<CheckinRoomMappingDTO> reservationCheck(@Valid @PathVariable("reservation_token") String reservation_token, @PathVariable("license_no") String license_no){
+    @RequestMapping(value = "/reservationcheck/{reservation_token}/{license_no}", method=RequestMethod.GET, headers="Content-Type=application/json")
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> reservationCheck(@Valid @PathVariable("reservation_token") String reservation_token, @PathVariable("license_no") String license_no){
         Integer guest_id = guestImplementation.getGuestByLicenseNo(license_no);
+        try{
+            if(guest_id == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }else{
+                ReservationDTO reservationDTO = reservationImplementation.getReservationById(reservation_token,guest_id);
+                //List<CheckinRoomMappingDTO> checkinRoomMappingDTOs = checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservationDTO);
+                return new ResponseEntity<>(checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservationDTO),HttpStatus.OK);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         //ReservationDTO reservationDTO = reservationImplementation.getReservationById(reservation_token, guest_id);
 
-        Integer reservation_id = reservationImplementation.getReservationById(reservation_token,guest_id);
-        List<CheckinRoomMappingDTO> checkinRoomMappingDTOs = checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservation_id);
-        return checkinRoomMappingDTOs;
+
     }
 
-    /* Check in for the guest */
+    /* Check in a Guest, updates the CheckinRoomMapping and Rooms tables */
 
-    @RequestMapping(value = "/checkinGuest", method=RequestMethod.POST, headers="Content-Type=application/json")
+    @RequestMapping(value="/checkinGuest", method=RequestMethod.PUT, headers="Content-Type=application/json")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody CheckinRoomMappingDTO guestCheckin (@Valid @RequestBody CheckinRoomMappingDTO checkinRoomMappingDTO) {
-        return checkinRoomMappingImplementation.checkin(checkinRoomMappingDTO);
+    public @ResponseBody void checkinGuest(@Valid @RequestBody List<CheckinRoomMappingDTO> crmDTOList){
+
+        checkinRoomMappingImplementation.checkinGuest(crmDTOList);
+        for(CheckinRoomMappingDTO crm: crmDTOList){
+            RoomDTO roomDTO = roomImplementation.getRoom(crm.getRoom_no());
+            roomDTO.setRoom_status(RoomStatus.NA);
+            roomImplementation.updateRoom(roomDTO);
+        }
     }
+
+    /* CheckOut a Guest, updates the Rooms table */
+
+    @RequestMapping(value="/checkoutGuest/{room_no}", method=RequestMethod.PUT, headers="Content-Type=application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody void checkoutGuest(@Valid @PathVariable("room_no") Integer room_no) {
+        RoomDTO roomDTO = roomImplementation.getRoom(room_no);
+            roomDTO.setRoom_status(RoomStatus.A);
+            roomImplementation.updateRoom(roomDTO);
+        }
 
     /*
       Implementation of report API

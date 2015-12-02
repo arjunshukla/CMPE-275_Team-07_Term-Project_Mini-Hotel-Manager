@@ -17,4 +17,6 @@ public interface InterfaceForReservation {
     public void delete(Reservation reservation);
     public Reservation getReservationByLicense_Token(String reservation_token, Integer guest_Id);
     public List<Reservation> getAllReservations();
+
+    Reservation getReservationById(Integer reservation_id);
 }

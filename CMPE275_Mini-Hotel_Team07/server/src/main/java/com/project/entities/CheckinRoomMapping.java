@@ -14,9 +14,9 @@ import java.sql.Date;
 @Table(name = "checkin_room_mapping")
 public class CheckinRoomMapping implements Serializable{
 
-//    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reservation_id")
-    private Integer reservation_id;
+    private Reservation reservation;
 
 //    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_no")
@@ -35,12 +35,12 @@ public class CheckinRoomMapping implements Serializable{
     @Column(name = "checkout_date", unique = false, nullable = false)
     private Date checkout_date;
 
-    public Integer getReservation_id() {
-        return reservation_id;
+    public Reservation getReservation() {
+        return reservation;
     }
 
-    public void setReservation_id(Integer reservation_id) {
-        this.reservation_id = reservation_id;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     public Integer getGuest_count() {

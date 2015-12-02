@@ -1,8 +1,11 @@
 package com.project.implementation;
+import com.project.dao.InterfaceForReservation;
 import com.project.dto.ReportDTO;
 import com.project.dao.InterfaceForCheckinRoomMapping;
 import com.project.dto.CheckinRoomMappingDTO;
+import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
+import com.project.entities.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.project.entities.Room;
 import javax.transaction.Transactional;
@@ -26,36 +29,77 @@ public class CheckinRoomMappingImplementation {
     InterfaceForCheckinRoomMapping ReportDaoObject;
     @Autowired
     InterfaceForCheckinRoomMapping checkinRoomMappingDao;
+    @Autowired
+    InterfaceForReservation reservationDao;
+//
+//    /*  Create Checkin */
+//
+//  public CheckinRoomMappingDTO checkin(CheckinRoomMappingDTO checkinRoomMappingDTO) {
+//
+//        CheckinRoomMapping checkinRoomMappingObject = new CheckinRoomMapping();
+//
+//        try {
+//            org.apache.commons.beanutils.BeanUtils.copyProperties(checkinRoomMappingObject, checkinRoomMappingDTO);
+//        }
+//        catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+//        catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//      Reservation reservation = reservationDao.getReservationById(checkinRoomMappingDTO.getReservation_id());
+//      if(reservation!=null) {
+//          checkinRoomMappingObject.setReservation(reservation);
+//
+//
+//          List<CheckinRoomMapping> checkinRoomMappingList;
+//          checkinRoomMappingList = checkinRoomMappingDao.getCheckinByReservationId(reservation.getReservation_id());
+//          for(CheckinRoomMapping crm : checkinRoomMappingList)
+//          checkinRoomMappingDao.update(crm);
+//          return checkinRoomMappingDTO;
+//      }else
+//          return null;
+//  }
+
 
     /*  Create Checkin */
 
-  public CheckinRoomMappingDTO checkin(CheckinRoomMappingDTO checkinRoomMappingDTO) {
+    public void checkinGuest(List<CheckinRoomMappingDTO> crmDTOList) {
 
-        CheckinRoomMapping checkinRoomMappingObject = new CheckinRoomMapping();
+        for (CheckinRoomMappingDTO crmDTO : crmDTOList) {
 
-        try {
-            org.apache.commons.beanutils.BeanUtils.copyProperties(checkinRoomMappingObject, checkinRoomMappingDTO);
+            CheckinRoomMapping checkinRoomMappingObject = new CheckinRoomMapping();
+
+            try {
+                org.apache.commons.beanutils.BeanUtils.copyProperties(checkinRoomMappingObject, crmDTO);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            Reservation reservation = reservationDao.getReservationById(crmDTO.getReservation_id());
+            if (reservation != null) {
+                checkinRoomMappingObject.setReservation(reservation);
+//            List<CheckinRoomMapping> checkinRoomMappingList;
+//            checkinRoomMappingList = checkinRoomMappingDao.getCheckinByReservationId(reservation.getReservation_id());
+                checkinRoomMappingDao.update(checkinRoomMappingObject);
+            }
+
         }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-      checkinRoomMappingObject = checkinRoomMappingDao.save(checkinRoomMappingObject);
-      return checkinRoomMappingDTO;
-  }
+    }
+
 
     @Transactional
-    public List<CheckinRoomMappingDTO> getReservationFromCheckinMapping(Integer reservation_id) {
-        List<CheckinRoomMapping> checkinList = checkinRoomMappingDao.getAllCheckins(reservation_id);
+    public List<CheckinRoomMappingDTO> getReservationFromCheckinMapping(ReservationDTO reservationDTO) {
+        List<CheckinRoomMapping> checkinList = checkinRoomMappingDao.getAllCheckins(reservationDTO);
         //List<Room> allRoomsList = new ArrayList<Room>();
         List<CheckinRoomMappingDTO> checkinDTOList = new ArrayList<CheckinRoomMappingDTO>();
         if (!checkinList.isEmpty()) {
             //CheckinRoomMappingDTO checkinRoomMappingDTO = new CheckinRoomMappingDTO();
             for (CheckinRoomMapping checkroom : checkinList) {
                 CheckinRoomMappingDTO checkinRoomMappingDTO = new CheckinRoomMappingDTO();
-                checkinRoomMappingDTO.setReservation_id(checkroom.getReservation_id());
+                checkinRoomMappingDTO.setReservation_id(checkroom.getReservation().getReservation_id());
                 checkinRoomMappingDTO.setRoom_no(checkroom.getRoom_no());
                 checkinRoomMappingDTO.setGuest_count(checkroom.getGuest_count());
                 checkinRoomMappingDTO.setCheckin_date(checkroom.getCheckin_date());
@@ -63,12 +107,13 @@ public class CheckinRoomMappingImplementation {
                 checkinRoomMappingDTO.setMappingId(checkroom.getMappingId());
                 checkinDTOList.add(checkinRoomMappingDTO);
             }
+            return checkinDTOList;
         }
         else
         {
             return null;
         }
-        return checkinDTOList;
+
     }
 
     @Transactional

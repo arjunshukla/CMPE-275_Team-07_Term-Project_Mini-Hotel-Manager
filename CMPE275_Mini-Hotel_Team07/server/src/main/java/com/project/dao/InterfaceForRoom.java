@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface InterfaceForRoom {
     Room save(Room room);
-    public Room update(Room room);
-    public void delete(Room room);
+    public void update(Room room);
+    public void delete(Integer room_no);
     public Room getRoomByNo(Integer roomNo);
     public List<Room> getAllRooms();
 }

@@ -1,5 +1,6 @@
 package com.project.dao;
 
+import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Room;
 
@@ -17,8 +18,8 @@ public interface InterfaceForCheckinRoomMapping {
     CheckinRoomMapping save(CheckinRoomMapping checkinRoomMapping);
     public void update(CheckinRoomMapping checkinRoomMapping);
     public void delete(CheckinRoomMapping checkinRoomMapping);
-    public CheckinRoomMapping getCheckinByReservationId(Integer reservation_id);
-    public List<CheckinRoomMapping> getAllCheckins();
+    public List<CheckinRoomMapping> getCheckinByReservationId(Integer reservation_id);
+//    public List<CheckinRoomMapping> getAllCheckins();
     public List<Room> getOccupiedRoomsData(Date d);
-    List<CheckinRoomMapping> getAllCheckins(Integer reservation_id);
+    List<CheckinRoomMapping> getAllCheckins(ReservationDTO reservationDTO);
 }

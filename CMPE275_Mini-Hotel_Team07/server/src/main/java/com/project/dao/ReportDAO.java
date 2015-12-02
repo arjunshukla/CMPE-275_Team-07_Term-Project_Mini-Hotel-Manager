@@ -8,11 +8,8 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-/**
- * Created by PankajPai on 11/22/2015.
- */
-/*
-public class ReportDAO implements InterfaceForReport{
+
+public class ReportDAO implements InterfaceForReport {
 
     @Autowired
     HibernateTemplate hibernateTemplate;
@@ -28,15 +25,16 @@ public class ReportDAO implements InterfaceForReport{
         String dateS = dt.format(d);
 
 
+        String query = "";//"Checkin_room_mapping.room_no from checkin_room_mapping Where checkin_room_mapping.checkin_date <= '? ' and checkin_room_mapping.checkout_date >= '?' ";
 
-         String query =  "select checkin_room_mapping.room_no from checkin_room_mapping Where checkin_room_mapping.checkin_date <= '? ' and checkin_room_mapping.checkout_date >= '?' ";
-
-        System.out.println("in check friendship with query: "+query);
+        System.out.println("in check friendship with query: " + query);
 
         List<CheckinRoomMapping> rooms = (List<CheckinRoomMapping>) hibernateTemplate.find(query);
 
         System.out.println(rooms);
-
+        return rooms;
+    }
+}
 
 /*
         if (rooms.isEmpty())
@@ -47,4 +45,3 @@ public class ReportDAO implements InterfaceForReport{
     }
 
 }*/
-
