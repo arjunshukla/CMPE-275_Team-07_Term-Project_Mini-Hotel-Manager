@@ -147,7 +147,7 @@ public class AppConfiguration {
         dataSource.setDriverClassName(com.mysql.jdbc.Driver.class.getName());
         dataSource.setUrl("jdbc:mysql://practicedbinstance.ctivigkusjjd.us-west-2.rds.amazonaws.com:3306/minihotel");
         dataSource.setUsername("root");
-        dataSource.setPassword("12345678");
+        dataSource.setPassword("qwerty1234");
         dataSource.setInitialSize(2);
         dataSource.setMaxTotal(5);
         return dataSource;

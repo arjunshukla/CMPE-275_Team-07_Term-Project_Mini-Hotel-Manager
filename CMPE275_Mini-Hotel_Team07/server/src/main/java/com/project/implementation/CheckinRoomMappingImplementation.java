@@ -155,6 +155,10 @@ public class CheckinRoomMappingImplementation {
         List<Integer> reservedRoomIntegerList = new ArrayList<Integer>();
         List<Integer> occupiedRoomIntegerList = new ArrayList<Integer>();
 
+        Integer occupiedCount = 0;
+        Integer notOccupied = totalRooms.size();
+        Integer reservedCount =0;
+
         System.out.println("Todays date is: " + todayDate);
         System.out.println("Date date is: " + date);
 
@@ -162,26 +166,39 @@ public class CheckinRoomMappingImplementation {
         if(todayDate.toString().equalsIgnoreCase(date.toString())) {// checks if current date
             // Occupied Rooms
             System.out.println("Im am here in today");
+
+
             roomReportList = ReportDaoObject.getOccupiedRoomsData(date);
-            map.put("occupiedrooms", roomReportList);
-            Integer occupiedCount = roomReportList.size();
+            System.out.println("Room list is: " + roomReportList);
+            if(roomReportList != null) {
+                map.put("occupiedrooms", roomReportList);
+                occupiedCount = roomReportList.size();
+            }
+            else
+            {
+                map.put("occupiedrooms", roomReportList);
+            }
 
-
-
-            //Reserved rooms
             roomReportList = ReportDaoObject.getReservationData(date);
-            map.put("reservedrooms", roomReportList);
-            Integer reservedCount = roomReportList.size();
 
+            if(roomReportList != null) {
+                //Reserved rooms
+                map.put("reservedrooms", roomReportList);
+                reservedCount = roomReportList.size();
+            }
+            else{
+                map.put("reservedrooms", roomReportList);
+            }
 
             // Available rooms
 
-            Integer notOccupied = totalRooms.size() - occupiedCount - reservedCount;
+            notOccupied = totalRooms.size() - occupiedCount - reservedCount;
             notOccupiedRooms.add(notOccupied);
 
             map.put("notOccupiedCount", notOccupiedRooms);
 
             return map;
+
         }
         else if (date.after(todayDate)) { // checks if future date
             roomReportList = ReportDaoObject.getReservationData(date);
@@ -189,22 +206,23 @@ public class CheckinRoomMappingImplementation {
             if (roomReportList != null) {
 
                 map.put("reservedrooms", roomReportList);
-
-
-                // Calculate not occupied rooms
-               // System.out.println("Total rooms" + totalRooms.size());
-
-
-                Integer notOccupied = totalRooms.size() - roomReportList.size();
-                notOccupiedRooms.add(notOccupied);
-
-                map.put("notOccupiedCount", notOccupiedRooms);
-
-                return map;
-
-            } else {
-                return null;
+                reservedCount = roomReportList.size();
             }
+            else
+            {
+                map.put("reservedrooms", roomReportList);
+            }
+
+            // Calculate not occupied rooms
+            // System.out.println("Total rooms" + totalRooms.size());
+
+
+            notOccupied = totalRooms.size() - reservedCount;
+            notOccupiedRooms.add(notOccupied);
+
+            map.put("notOccupiedCount", notOccupiedRooms);
+
+            return map;
 
         } else if (date.before(todayDate)) {// checks if past date
             System.out.println("Im am here in before");
@@ -213,21 +231,21 @@ public class CheckinRoomMappingImplementation {
 
             if (roomReportList != null) {
                 // Occupied Rooms
-                roomReportList = ReportDaoObject.getOccupiedRoomsData(date);
                 map.put("occupiedrooms", roomReportList);
-                Integer occupiedCount = roomReportList.size();
-
-                // Available rooms
-                Integer notOccupied = totalRooms.size() - occupiedCount;
-                notOccupiedRooms.add(notOccupied);
-
-                map.put("notOccupiedCount", notOccupiedRooms);
-
-                return map;
-
-            } else {
-                return null;
+                occupiedCount = roomReportList.size();
             }
+            else{
+                map.put("occupiedrooms", roomReportList);
+            }
+
+
+            // Available rooms
+            notOccupied = totalRooms.size() - occupiedCount;
+            notOccupiedRooms.add(notOccupied);
+
+            map.put("notOccupiedCount", notOccupiedRooms);
+
+            return map;
         }
         return map;
 

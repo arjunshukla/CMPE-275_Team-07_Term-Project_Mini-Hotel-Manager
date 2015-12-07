@@ -301,16 +301,21 @@ public class AppController extends WebMvcConfigurerAdapter {
     @RequestMapping(value = "/report/{reportDate}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> getRoomsReport(@Valid @PathVariable String reportDate){
-        Date date= Date.valueOf(reportDate);
-//>>>>>>> Stashed changes
+        try{
+            Date date= Date.valueOf(reportDate);
 
-        HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
+            HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
 
-        if(map == null){
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            if(map == null){
+                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            }
+            else{
+                return new ResponseEntity<>(map,HttpStatus.OK);
+            }
         }
-        else{
-            return new ResponseEntity<>(map,HttpStatus.OK);
+        catch (Exception e){
+            System.out.println("Invalid date");
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
 
     }
