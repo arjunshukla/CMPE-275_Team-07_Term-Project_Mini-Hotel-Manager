@@ -4,7 +4,8 @@ import com.project.ENUMS.RoomType;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
-import com.project.entities.Room;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 
@@ -25,6 +26,11 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
 
     @Autowired
     HibernateTemplate hibernateTemplate;
+
+    @Autowired
+    SessionFactory sessionFactory;
+
+    Transaction txn;
 
     @Override
     public CheckinRoomMapping save(CheckinRoomMapping checkinRoomMapping) {
@@ -106,6 +112,14 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
 //            }
             return roomList;
         }
+    }
+
+    @Override
+    public Integer deleteReservationRecords(Integer reservation_id) {
+       // String query = "Delete from CheckinRoomMapping where reservation =?";
+        Integer deletedRecords = hibernateTemplate.bulkUpdate("delete from CheckinRoomMapping where reservation="+reservation_id);
+        System.out.println("deleted: "+deletedRecords);
+        return deletedRecords;
     }
 
     public List<Integer> getOccupiedRoomsData(Date date) {

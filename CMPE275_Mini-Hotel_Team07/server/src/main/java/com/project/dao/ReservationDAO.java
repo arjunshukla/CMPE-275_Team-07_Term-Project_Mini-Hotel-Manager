@@ -27,7 +27,11 @@ public class ReservationDAO implements InterfaceForReservation {
     }
 
     @Override
-    public void update(Reservation reservation) {
+    public Integer update(Integer reservation) {
+        Integer updatedReservation =
+                hibernateTemplate.bulkUpdate("Update Reservation set reservation_status = 'C' where reservation_id="+reservation);
+        System.out.println(updatedReservation);
+        return updatedReservation;
 
     }
 
@@ -63,5 +67,13 @@ public class ReservationDAO implements InterfaceForReservation {
         else{
             return reservationList.get(0);
         }
+    }
+
+    @Override
+    public List<Reservation> find(String reservationToken) {
+        String query = "from Reservation where reservation_token =?";
+        List<Reservation> reservationList = (List<Reservation>) hibernateTemplate.find(query,reservationToken);
+
+        return reservationList;
     }
 }

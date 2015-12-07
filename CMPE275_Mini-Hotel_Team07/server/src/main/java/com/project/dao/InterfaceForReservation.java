@@ -13,10 +13,12 @@ import java.util.List;
 
 public interface InterfaceForReservation {
     Reservation save(Reservation reservation);
-    public void update(Reservation reservation);
+    public Integer update(Integer reservation);
     public void delete(Reservation reservation);
     public Reservation getReservationByLicense_Token(String reservation_token, Integer guest_Id);
     public List<Reservation> getAllReservations();
 
     Reservation getReservationById(Integer reservation_id);
+
+    public List<Reservation> find(String reservationObject);
 }

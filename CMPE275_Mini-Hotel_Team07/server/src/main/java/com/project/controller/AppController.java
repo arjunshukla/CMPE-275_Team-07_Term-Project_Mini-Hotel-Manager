@@ -64,6 +64,20 @@ public class AppController extends WebMvcConfigurerAdapter {
         return result;
     }
 
+    /* Cancel Reservation */
+    @RequestMapping(value = "/cancelReservation", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    ArrayList<HashMap<String,String>> cancelReservation
+    (@Valid @RequestParam(value = "reservation_token") String reservation_token){
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setReservation_token(reservation_token);
+
+    //(@Valid @RequestBody ReservationDTO reservationDTO){
+        System.out.println("reservation token: "+reservationDTO.getReservation_token());
+        ArrayList<HashMap<String,String>> reservDTO = reservationImplementation.cancelReservation(reservationDTO);
+        return reservDTO;
+    }
     /* Search for available rooms
 
      * checkin_date
@@ -87,6 +101,8 @@ public class AppController extends WebMvcConfigurerAdapter {
         return checkingDTO;
     }
 
+
+    /* Add a room*/
     @RequestMapping(value="/room", method = RequestMethod.POST,  headers = {"Content-type=application/json"})
     // @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createRoom(@Valid @RequestBody RoomDTO roomDTO) {
