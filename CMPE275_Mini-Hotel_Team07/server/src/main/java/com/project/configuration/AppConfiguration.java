@@ -1,11 +1,6 @@
 package com.project.configuration;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import com.project.dao.*;
-import com.project.entities.Billing;
 import com.project.implementation.*;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.SessionFactory;
@@ -16,6 +11,9 @@ import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Created by Team07 on 11/21/15.

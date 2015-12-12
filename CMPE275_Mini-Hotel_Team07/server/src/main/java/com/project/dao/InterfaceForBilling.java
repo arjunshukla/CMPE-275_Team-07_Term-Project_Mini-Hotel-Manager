@@ -17,4 +17,6 @@ public interface InterfaceForBilling {
     public void delete(Billing bill);
     public Billing getBillByNo(Integer bill_no);
     public List<Billing> getAllBills();
+
+    Integer insertBillData(Billing billingDTO);
 }

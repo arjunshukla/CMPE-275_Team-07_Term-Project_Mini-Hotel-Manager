@@ -43,4 +43,10 @@ public class BillingDAO implements InterfaceForBilling {
     public List<Billing> getAllBills() {
         return null;
     }
+
+    @Override
+    public Integer insertBillData(Billing billing) {
+        Integer bill_id = (Integer)hibernateTemplate.save(billing);
+        return bill_id;
+    }
 }

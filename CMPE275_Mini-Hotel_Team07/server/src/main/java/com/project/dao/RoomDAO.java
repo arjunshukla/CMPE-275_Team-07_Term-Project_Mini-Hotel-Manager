@@ -1,5 +1,7 @@
 package com.project.dao;
 
+import com.project.ENUMS.RoomType;
+import com.project.dto.RoomDTO;
 import com.project.entities.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -60,5 +62,18 @@ public class RoomDAO implements InterfaceForRoom {
             return roomsList;
         }
 
+    }
+
+    @Override
+    public Enum<RoomType> findRoomType(RoomDTO roomDTO) {
+        Room room = new Room();
+        Integer room_no = roomDTO.getRoom_no();
+        System.out.println("RoomNo: "+room_no);
+        room.setRoom_no(roomDTO.getRoom_no());
+        String query = "from Room where room_no=?";
+        List<Room> roomDetails = (List<Room>)hibernateTemplate.find(query,room_no);
+        Enum<RoomType> roomType= roomDetails.get(0).getRoom_type();
+        System.out.println("roomType: "+roomType);
+        return roomType;
     }
 }

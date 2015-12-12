@@ -18,4 +18,5 @@ public interface InterfaceForRoomPrice {
     public InterfaceForRoomPrice getRoomPriceByType(RoomType roomType);
     public List<RoomType> getAllRoomTypes();
 
+    Double getRoomPrice(Enum<RoomType> roomType);
 }

@@ -1,5 +1,7 @@
 package com.project.dao;
 
+import com.project.ENUMS.RoomType;
+import com.project.dto.RoomDTO;
 import com.project.entities.Room;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface InterfaceForRoom {
     public void delete(Integer room_no);
     public Room getRoomByNo(Integer roomNo);
     public List<Room> getAllRooms();
+
+    public Enum<RoomType> findRoomType(RoomDTO roomDTO);
 }

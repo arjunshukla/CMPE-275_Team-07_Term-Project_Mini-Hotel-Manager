@@ -122,6 +122,16 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
         return deletedRecords;
     }
 
+    @Override
+    public List<CheckinRoomMapping> findMappingForBilling(ReservationDTO reservationDTO) {
+        Reservation reserv = new Reservation();
+        reserv.setReservation_id(reservationDTO.getReservation_id());
+        String query = "from CheckinRoomMapping where reservation=?";
+        List<CheckinRoomMapping>crmRecords = (List<CheckinRoomMapping>)hibernateTemplate.find(query,reserv);
+        System.out.println(crmRecords.size());
+        return crmRecords;
+    }
+
     public List<Integer> getOccupiedRoomsData(Date date) {
 
         String query =  "Select Distinct room_no from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ? AND guest_count != 0 Order by room_no";

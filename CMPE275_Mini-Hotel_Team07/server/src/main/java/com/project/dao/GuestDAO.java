@@ -59,4 +59,13 @@ public class GuestDAO implements InterfaceForGuest {
             return guestList.get(0);
         }
     }
+
+    @Override
+    public List<Guest> findGuestEmailId(Integer guest_id) {
+        String query = "from Guest where guest_id=?";
+        List<Guest> emailList = (List<Guest>) hibernateTemplate.find(query,guest_id);
+        //String emailId=emailList.get(0).toString();
+        //System.out.println("email in guestDAO: "+emailId);
+        return emailList;
+    }
 }

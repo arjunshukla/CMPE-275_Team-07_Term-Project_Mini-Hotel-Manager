@@ -31,4 +31,6 @@ public interface InterfaceForCheckinRoomMapping {
 
 
     Integer deleteReservationRecords(Integer reservation_id);
+
+    List<CheckinRoomMapping> findMappingForBilling(ReservationDTO reservation_id);
 }

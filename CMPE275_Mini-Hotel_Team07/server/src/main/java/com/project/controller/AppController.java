@@ -54,6 +54,26 @@ public class AppController extends WebMvcConfigurerAdapter {
     @Autowired
     UserImplementation userImplementation;
 
+    /*Billing*/
+    @RequestMapping(value = "/billing",method=RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody
+    ArrayList<HashMap<String,String>> generateBill
+    (
+     @Valid @RequestParam(value="reservation_token") String reservation_token,
+     @Valid @RequestParam(value="user_name") String user_name,
+     @Valid @RequestParam(value="discount") String discount){
+        //System.out.println("room_no"+room_no);
+        System.out.println("reservation_token"+reservation_token);
+        System.out.println("user_name"+user_name);
+        System.out.println("discount"+discount);
+
+        Double discountDouble = Double.parseDouble(discount);
+        ArrayList<HashMap<String,String>> sendBill = reservationImplementation.calculateBill(reservation_token,user_name,discountDouble);
+
+        return sendBill;
+    }
+
     /* Login APIs*/
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String createUser (@Valid @RequestBody UserDTO userDTO) {
@@ -301,21 +321,16 @@ public class AppController extends WebMvcConfigurerAdapter {
     @RequestMapping(value = "/report/{reportDate}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> getRoomsReport(@Valid @PathVariable String reportDate){
-        try{
-            Date date= Date.valueOf(reportDate);
+        Date date= Date.valueOf(reportDate);
+//>>>>>>> Stashed changes
 
-            HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
+        HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
 
-            if(map == null){
-                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-            }
-            else{
-                return new ResponseEntity<>(map,HttpStatus.OK);
-            }
-        }
-        catch (Exception e){
-            System.out.println("Invalid date");
+        if(map == null){
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+        else{
+            return new ResponseEntity<>(map,HttpStatus.OK);
         }
 
     }

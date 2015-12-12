@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Table(name = "billing")
 public class Billing implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bill_id", unique = true, nullable = false)
     private Integer bill_id;
 

@@ -20,4 +20,5 @@ public interface InterfaceForUser {
     public User getUserByIdAndUserName(Integer userId, String username);
     public List<User> getAllUsers();
     public String loginUser(User user);
+    public List<User> verifyUserByUserName(String user_name);
 }

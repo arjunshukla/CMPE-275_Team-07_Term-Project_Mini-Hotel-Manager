@@ -43,4 +43,13 @@ public class RoomPriceDAO implements InterfaceForRoomPrice {
     public List<RoomType> getAllRoomTypes() {
         return null;
     }
+
+    @Override
+    public Double getRoomPrice(Enum<RoomType> roomType) {
+        String query = "Select room_price from RoomPrice where room_type=?";
+        List<Double> price =(List<Double>) hibernateTemplate.find(query,roomType);
+        Double roomPrice = price.get(0);
+        System.out.println(roomPrice);
+        return roomPrice;
+    }
 }

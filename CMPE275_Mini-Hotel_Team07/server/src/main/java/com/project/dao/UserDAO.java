@@ -1,5 +1,4 @@
 package com.project.dao;
-import com.project.ENUMS.UserType;
 import com.project.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -65,5 +64,13 @@ public class UserDAO implements InterfaceForUser {
             System.out.println(users.get(0).getUser_type().toString());
             return users.get(0).getUser_type().toString();
         }
+    }
+
+    @Override
+    public List<User> verifyUserByUserName(String user_name) {
+        String query = "from User where user_name = ?";
+        List<User> userDetails = (List<User>)hibernateTemplate.find(query,user_name);
+        System.out.println(userDetails.get(0));
+        return userDetails;
     }
 }

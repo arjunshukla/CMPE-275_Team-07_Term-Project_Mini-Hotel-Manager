@@ -2,6 +2,8 @@ package com.project.dao;
 
 import com.project.entities.Guest;
 
+import java.util.List;
+
 /**
  * Created by Team07 on 11/21/15.
  * Members: Arjun Shukla, Arpit Khare, Sneha Pimpalkar, Ankit Sharma, Tejas Pai
@@ -20,4 +22,6 @@ public interface InterfaceForGuest {
    public Guest getGuestByEmail(String email);
 
    public Guest getGuestByLicenseNo(String licenseNo);
+
+    List<Guest> findGuestEmailId(Integer guest_id);
 }
