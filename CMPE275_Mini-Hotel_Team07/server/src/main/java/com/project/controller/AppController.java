@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.ENUMS.RoomStatus;
 import com.project.configuration.AppConfiguration;
 import com.project.dto.*;
+import com.project.entities.Room;
 import com.project.implementation.*;
 import com.project.dto.CheckinRoomMappingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,6 +118,9 @@ public class AppController extends WebMvcConfigurerAdapter {
         System.out.println(checkinDTO.getCheckin_date());
         System.out.println(checkinDTO.getCheckout_date());
 //        String s = checkinDTO.
+
+        // if() room is already reserved for given dates then return null
+        //else proceed with following:
         ArrayList<HashMap<String, String>> checkingDTO = checkinRoomMappingImplementation.getAvailableReservations(checkinDTO);
         return checkingDTO;
     }
@@ -182,11 +186,17 @@ public class AppController extends WebMvcConfigurerAdapter {
     public ResponseEntity<?> deleteRoom(@Valid @PathVariable("room_no") Integer room_no) {
         RoomDTO room = roomImplementation.getRoom(room_no);
         try {
-            if (room == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (room != null) {
+                List<Integer> roomsList = checkinRoomMappingImplementation.getRoom(room_no);
+                if(roomsList==null){
+                    roomImplementation.deleteRoom(roomImplementation.getRoomByNumber(room_no));
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }else{
+                    return new ResponseEntity<Object>(HttpStatus.CONFLICT);
+                }
+                //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                roomImplementation.deleteRoom(room_no);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -254,6 +264,31 @@ public class AppController extends WebMvcConfigurerAdapter {
 
     }
 
+    /*
+    @RequestMapping(value="/room/{room_no}", method= RequestMethod.DELETE, headers = {"Content-type=application/json"})
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> deleteRoom(@Valid @PathVariable Integer room_no){
+
+
+        1. check if room exists
+        2. if exists then check if reserved from checkinMappingTable
+        3. So if the room number is valid and not reserved, then delete it
+
+        Room room = roomImplementation.getRoomByNumber(room_no);
+        try{
+            if(room == null){
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+//                checkinRoomMappingImplementation.checkIfRoomisReserved(room);
+
+                roomImplementation.deleteRoom(room.getRoom_no());
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+        }catch(Exception e){
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
+    } */
 
     /* Check If Reservation exists for a guest.
     Also check the checkinRoomMapping to verify the number of rooms booked on one reservation Id*/
@@ -322,8 +357,6 @@ public class AppController extends WebMvcConfigurerAdapter {
     @ResponseBody
     public ResponseEntity<?> getRoomsReport(@Valid @PathVariable String reportDate){
         Date date= Date.valueOf(reportDate);
-//>>>>>>> Stashed changes
-
         HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
 
         if(map == null){
@@ -332,7 +365,5 @@ public class AppController extends WebMvcConfigurerAdapter {
         else{
             return new ResponseEntity<>(map,HttpStatus.OK);
         }
-
     }
-
 }

@@ -63,6 +63,15 @@ public class RoomImplementation {
         }
     }
 
+    public Room getRoomByNumber(Integer room_no){
+
+        Room room = roomDAO.getRoomByNo(room_no);
+        if(room!= null)
+            return room;
+        else
+            return null;
+    }
+
     /*Get all rooms*/
 
     @Transactional
@@ -111,8 +120,8 @@ public class RoomImplementation {
 
     /*Delete a room*/
     @Transactional
-    public void deleteRoom(Integer room_no) {
-        roomDAO.delete(room_no);
+    public void deleteRoom(Room room) {
+        roomDAO.delete(room);
     }
 
 }

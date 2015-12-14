@@ -33,9 +33,10 @@ public class RoomDAO implements InterfaceForRoom {
     }
 
     @Override
-    public void delete(Integer room_no) {
-        String query ="delete from rooms where room_no=?";
-        hibernateTemplate.delete(query);
+    public void delete(Room room) {
+//        String query ="delete from Room where room_no=?";
+//        hibernateTemplate.delete(query,room_no);
+        hibernateTemplate.delete(room);
     }
 
     @Override

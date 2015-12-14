@@ -11,6 +11,7 @@ import org.springframework.orm.hibernate4.HibernateTemplate;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,11 +86,15 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
         System.out.println("hello");
         // Date
         ArrayList<HashMap<String, String>> roomList = new ArrayList<>();
+//        String query = "Select room_no from Room where room_no not in \n" +
+//                "(select room_no from CheckinRoomMapping Where checkin_date <= ? \n" +
+//                "and checkout_date >= ? ) and room_type = ?";
+
         String query = "Select room_no from Room where room_no not in \n" +
-                "(select room_no from CheckinRoomMapping Where checkin_date <= ? \n" +
-                "and checkout_date >= ? ) and room_type = ?";
+                "(select room_no from CheckinRoomMapping Where (checkin_date between ? AND ?) OR (checkout_date between ? AND ?) ) and room_type = ?";
+
         //  @SuppressWarnings("unchecked")
-        List<Integer> checkinRoomMapping = (List<Integer>) hibernateTemplate.find(query,checkin_date,checkout_date,room_type);
+        List<Integer> checkinRoomMapping = (List<Integer>) hibernateTemplate.find(query,checkin_date,checkout_date,checkin_date,checkout_date,room_type);
         if (checkinRoomMapping.isEmpty()) {
             return null;
         } else {
@@ -102,14 +107,6 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
                 roomList.add(hm);
 
             }
-
-            //System.out.println("size: "+checkinRoomMapping.size());
-//            for(int i =0;i<checkinRoomMapping.size();i++) {
-//                //Date checkin_date1 = checkinRoomMapping.get(0).getCheckin_date();
-//                System.out.print("checkin_date"+ checkin_date);
-//                Date checkout = checkinRoomMapping.get(0).getCheckout_date();
-//                System.out.println("checkout: "+checkout);
-//            }
             return roomList;
         }
     }
@@ -132,10 +129,20 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
         return crmRecords;
     }
 
+//    @Override
+//    public void checkIfRoomisReserver(Integer room_no) {
+//        String query = "SELECT * FROM minihotel.checkin_room_mapping where guest_count>0 and ? between checkin_date and checkout_date;";
+//        List<Integer> listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query,date,date);
+//        //System.out.println(listOfOccupiedRooms.size());
+//        if (listOfOccupiedRooms.isEmpty()) {
+//            return null;
+//        } else {
+//            return listOfOccupiedRooms;
+//        }
+//    }
+
     public List<Integer> getOccupiedRoomsData(Date date) {
-
         String query =  "Select Distinct room_no from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ? AND guest_count != 0 Order by room_no";
-
         //@SuppressWarnings("unchecked")
         List<Integer> listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query,date,date);
         //System.out.println(listOfOccupiedRooms.size());
@@ -146,12 +153,9 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
         }
     }
 
-
     @Override
     public List<Integer> getReservationData(Date date) {
-
         String query =  "Select Distinct room_no from CheckinRoomMapping where checkin_date <= ? and checkout_date >= ? AND guest_count = 0 order by room_no";
-
         //@SuppressWarnings("unchecked")
         List<Integer> listOfOccupiedRooms = (List<Integer>) hibernateTemplate.find(query,date,date);
         //System.out.println(listOfOccupiedRooms.size());
@@ -177,6 +181,19 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
             return null;
         } else {
             return listOfOccupiedRooms;
+        }
+    }
+
+    @Override
+    public List<Integer> getRoom(Integer room_no){
+        String query = "select room_no from CheckinRoomMapping where room_no=? and checkout_date > ?";
+        //java.util.Date currdate = new java.util.Date();
+        java.sql.Date sqlDate = new java.sql.Date(new java.util.Date().getTime());
+        List<Integer> room_no_temp = (List<Integer>) hibernateTemplate.find(query,room_no,sqlDate);
+        if(room_no_temp == null){
+            return null;
+        }else{
+            return room_no_temp;
         }
     }
 

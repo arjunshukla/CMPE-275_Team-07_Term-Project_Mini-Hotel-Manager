@@ -33,4 +33,8 @@ public interface InterfaceForCheckinRoomMapping {
     Integer deleteReservationRecords(Integer reservation_id);
 
     List<CheckinRoomMapping> findMappingForBilling(ReservationDTO reservation_id);
+
+    List<Integer> getRoom(Integer room_no);
+
+    //void checkIfRoomisReserver(Integer room_no);
 }

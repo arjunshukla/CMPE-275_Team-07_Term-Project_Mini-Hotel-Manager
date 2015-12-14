@@ -7,6 +7,7 @@ import com.project.dto.CheckinRoomMappingDTO;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
+import com.project.entities.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
@@ -344,4 +345,17 @@ public class CheckinRoomMappingImplementation {
         return map;
 
     }
+
+    public List<Integer> getRoom(Integer room_no) {
+        List<Integer> room_no_from_crm = checkinRoomMappingDao.getRoom(room_no);
+        if(room_no_from_crm.isEmpty()){
+            return null;
+        }else{
+            return room_no_from_crm;
+        }
+    }
+//
+//    public void checkIfRoomisReserved(Room room) {
+//        checkinRoomMappingDao.checkIfRoomisReserver(room.getRoom_no());
+//    }
 }
