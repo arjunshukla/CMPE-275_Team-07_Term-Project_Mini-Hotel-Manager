@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.ENUMS.RoomStatus;
 import com.project.configuration.AppConfiguration;
 import com.project.dto.*;
+import com.project.entities.Reservation;
 import com.project.entities.Room;
 import com.project.implementation.*;
 import com.project.dto.CheckinRoomMappingDTO;
@@ -56,7 +57,7 @@ public class AppController extends WebMvcConfigurerAdapter {
     UserImplementation userImplementation;
 
     /*Billing*/
-    @RequestMapping(value = "/billing",method=RequestMethod.GET)
+    @RequestMapping(value = "/billing",method=RequestMethod.GET, headers="Content-Type=application/json")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody
     ArrayList<HashMap<String,String>> generateBill
@@ -175,7 +176,12 @@ public class AppController extends WebMvcConfigurerAdapter {
         System.out.println(converted_checkout_date);
         System.out.println(no_of_rooms_Int);
 
-        return reservationImplementation.makeReservation(guestDTO,no_of_rooms_Int,converted_checkin_date,converted_checkout_date);
+        try{
+            return reservationImplementation.makeReservation(guestDTO,no_of_rooms_Int,converted_checkin_date,converted_checkout_date);
+        }
+        catch(Exception e){
+            return null;
+        }
 
 //        return reservationDTO;
     }
@@ -334,20 +340,45 @@ public class AppController extends WebMvcConfigurerAdapter {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    /* CheckOut a Guest, updates the Rooms table */
+//    /* CheckOut a Guest, updates the Rooms table */
+//
+//    @RequestMapping(value="/checkoutGuest/{room_no}", method=RequestMethod.PUT, headers="Content-Type=application/json")
+//    @ResponseStatus(HttpStatus.OK)
+//    public @ResponseBody ResponseEntity<?> checkoutGuest(@Valid @PathVariable("room_no") Integer room_no) {
+//        RoomDTO roomDTO = roomImplementation.getRoom(room_no);
+//        try{
+//            roomDTO.setRoom_status(RoomStatus.A);
+//            roomImplementation.updateRoom(roomDTO);
+//        } catch(Exception e){
+//            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<Object>(HttpStatus.OK);
+//        }
 
-    @RequestMapping(value="/checkoutGuest/{room_no}", method=RequestMethod.PUT, headers="Content-Type=application/json")
+     /* CheckOut a Guest, updates the Rooms table */
+
+    @RequestMapping(value="/checkoutGuest/{reservation_token}", method=RequestMethod.PUT, headers="Content-Type=application/json")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ResponseEntity<?> checkoutGuest(@Valid @PathVariable("room_no") Integer room_no) {
-        RoomDTO roomDTO = roomImplementation.getRoom(room_no);
-        try{
-            roomDTO.setRoom_status(RoomStatus.A);
-            roomImplementation.updateRoom(roomDTO);
-        } catch(Exception e){
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<Object>(HttpStatus.OK);
-        }
+    public @ResponseBody ResponseEntity<?> checkoutGuest(@Valid @PathVariable("reservation_token") String reservation_token) {
+        Reservation reservation = reservationImplementation.getReservationByToken(reservation_token);
+        if(reservation!=null){
+        List<Integer> roomsList = checkinRoomMappingImplementation.getRoomNo(reservation);
+            for(int i=0; i<roomsList.size();i++) {
+
+                Integer room_no = roomsList.get(i);
+                RoomDTO roomDTO = roomImplementation.getRoom(room_no);
+                try {
+                    roomDTO.setRoom_status(RoomStatus.A);
+                    roomImplementation.updateRoom(roomDTO);
+                } catch (Exception e) {
+                    return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+                }
+            }
+                return new ResponseEntity<Object>(HttpStatus.OK);
+            }else{
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            }
+    }
 
 
     /*

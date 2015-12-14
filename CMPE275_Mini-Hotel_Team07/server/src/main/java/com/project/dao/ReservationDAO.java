@@ -76,4 +76,17 @@ public class ReservationDAO implements InterfaceForReservation {
 
         return reservationList;
     }
+
+    @Override
+    public Reservation getReservationByToken(String reservationToken) {
+        String query = "from Reservation where reservation_token =?";
+        List<Reservation> reservationList = (List<Reservation>) hibernateTemplate.find(query,reservationToken);
+        if(reservationList.isEmpty()){
+            return null;
+        }
+        else{
+            return reservationList.get(0);
+        }
+    }
+
 }

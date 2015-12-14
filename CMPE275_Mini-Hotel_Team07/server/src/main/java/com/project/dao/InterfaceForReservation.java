@@ -21,4 +21,6 @@ public interface InterfaceForReservation {
     Reservation getReservationById(Integer reservation_id);
 
     public List<Reservation> find(String reservationObject);
+
+    Reservation getReservationByToken(String reservation_token);
 }

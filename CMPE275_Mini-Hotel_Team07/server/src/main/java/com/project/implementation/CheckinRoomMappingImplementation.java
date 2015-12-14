@@ -5,6 +5,7 @@ import com.project.dao.InterfaceForCheckinRoomMapping;
 import com.project.dao.InterfaceForReservation;
 import com.project.dto.CheckinRoomMappingDTO;
 import com.project.dto.ReservationDTO;
+import com.project.dto.RoomDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
 import com.project.entities.Room;
@@ -352,6 +353,16 @@ public class CheckinRoomMappingImplementation {
             return null;
         }else{
             return room_no_from_crm;
+        }
+    }
+
+    public List<Integer> getRoomNo(Reservation reservation) {
+
+        List<Integer> roomsList = checkinRoomMappingDao.getRoomByReservationID(reservation);
+        if(roomsList.isEmpty()){
+            return null;
+        }else{
+            return roomsList;
         }
     }
 //

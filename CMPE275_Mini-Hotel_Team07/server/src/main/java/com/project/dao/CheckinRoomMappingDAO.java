@@ -4,6 +4,7 @@ import com.project.ENUMS.RoomType;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
+import com.project.entities.Room;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,6 +195,23 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
             return null;
         }else{
             return room_no_temp;
+        }
+    }
+
+    @Override
+    public List<Integer> getRoomByReservationID(Reservation reservation) {
+
+        String query =  "Select room_no from CheckinRoomMapping where reservation=?";
+
+        //@SuppressWarnings("unchecked")
+        List<Integer> roomsList = new ArrayList();
+
+        roomsList = (List<Integer>) hibernateTemplate.find(query,reservation);
+        //System.out.println(listOfOccupiedRooms.size());
+        if (roomsList.isEmpty()) {
+            return null;
+        } else {
+            return roomsList;
         }
     }
 

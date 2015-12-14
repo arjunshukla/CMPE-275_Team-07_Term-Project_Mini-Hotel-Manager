@@ -382,15 +382,10 @@ public class ReservationImplementation {
 
                 //email
                 billHash.put("bill_amount",amountPayableString);
+                billHash.put("bill_body", body);
                 billList.add(billHash);
                 //return billList;
             }
-
-
-
-
-
-
         }
         else
         {
@@ -403,6 +398,11 @@ public class ReservationImplementation {
 
         return billList;
 
+    }
+
+    @Transactional
+    public Reservation getReservationByToken(String reservation_token) {
+        return reservationDAO.getReservationByToken(reservation_token);
     }
 
 
