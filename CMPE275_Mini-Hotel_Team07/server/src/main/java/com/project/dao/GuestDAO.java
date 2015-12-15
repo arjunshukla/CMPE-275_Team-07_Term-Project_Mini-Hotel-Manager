@@ -15,6 +15,7 @@ import java.util.List;
 
 @Transactional
 public class GuestDAO implements InterfaceForGuest {
+    int guestID;
 
     @Autowired
     HibernateTemplate hibernateTemplate;
@@ -68,4 +69,38 @@ public class GuestDAO implements InterfaceForGuest {
         //System.out.println("email in guestDAO: "+emailId);
         return emailList;
     }
+
+    @Override
+    public Integer checkGuestExist(String guest_email,String license_no) {
+
+        String query = "from Guest where guest_email=? and license_no=?";
+        List<Guest> guestRecord = (List<Guest>) hibernateTemplate.find(query,guest_email,license_no);
+        //System.out.println("emailid: "+guestRecord.get(0).getGuest_email());
+        //System.out.println("license no: "+guestRecord.get(0).getLicense_no());
+        if(guestRecord.size()>0)
+        { guestID = guestRecord.get(0).getGuest_id();}
+
+        return guestID;
+    }
+
+    @Override
+    public Integer updateUserDetails(Integer guestID, String guest_name, String street, String city, String state, Integer zip) {
+
+        Integer count =
+                (Integer) hibernateTemplate.bulkUpdate("Update Guest set guest_name ='"+guest_name+"',street='"+street+"',city='"+city+"',state='"+state+"',zip='"+zip+"' where guest_id="+guestID);
+        System.out.println("count"+count);
+
+
+        return count;
+    }
+
+    @Override
+    public Guest getGuestRecord(Integer guestID) {
+        String query = "from Guest where guest_id=?";
+        List<Guest> guestRecord = (List<Guest>)hibernateTemplate.find(query,guestID);
+        //System.out.println("email:::: "+guestRecord.getGuest_email());
+        return guestRecord.get(0);
+    }
+
+
 }

@@ -4,7 +4,6 @@ import com.project.ENUMS.RoomType;
 import com.project.dto.ReservationDTO;
 import com.project.entities.CheckinRoomMapping;
 import com.project.entities.Reservation;
-import com.project.entities.Room;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.orm.hibernate4.HibernateTemplate;
 
 import javax.transaction.Transactional;
 import java.sql.Date;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +84,7 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
     public ArrayList<HashMap<String, String>> getAvailableRooms(Date checkin_date, Date checkout_date, Integer no_of_rooms, RoomType room_type) {
         System.out.println("hello");
         // Date
-        ArrayList<HashMap<String, String>> roomList = new ArrayList<>();
+        ArrayList<HashMap<String, String>> roomList = new ArrayList<HashMap<String, String>>();
 //        String query = "Select room_no from Room where room_no not in \n" +
 //                "(select room_no from CheckinRoomMapping Where checkin_date <= ? \n" +
 //                "and checkout_date >= ? ) and room_type = ?";
@@ -103,7 +101,7 @@ public class CheckinRoomMappingDAO implements InterfaceForCheckinRoomMapping {
 
                 System.out.println("display: "+"i: "+checkinRoomMapping.get(i));
                 String room_name = checkinRoomMapping.get(i).toString();
-                HashMap<String, String> hm = new HashMap<>();
+                HashMap<String, String> hm = new HashMap<String, String>();
                 hm.put("room_no", room_name);
                 roomList.add(hm);
 

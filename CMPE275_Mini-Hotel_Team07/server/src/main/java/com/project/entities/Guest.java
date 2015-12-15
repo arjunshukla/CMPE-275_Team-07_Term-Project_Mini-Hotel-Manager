@@ -23,7 +23,7 @@ public class Guest {
     @Column(name = "guest_email", unique = true, nullable = false)
     private String guest_email;
 
-    @Column(name = "license_no", unique = true, nullable = false)
+    @Column(name = "license_no", unique = false, nullable = false)
     private String license_no;
 
     @Column(name = "street", unique = false, nullable = true)

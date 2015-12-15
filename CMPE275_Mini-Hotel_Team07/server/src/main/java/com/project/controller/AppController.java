@@ -4,9 +4,7 @@ import com.project.ENUMS.RoomStatus;
 import com.project.configuration.AppConfiguration;
 import com.project.dto.*;
 import com.project.entities.Reservation;
-import com.project.entities.Room;
 import com.project.implementation.*;
-import com.project.dto.CheckinRoomMappingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -134,9 +132,9 @@ public class AppController extends WebMvcConfigurerAdapter {
         RoomDTO room = roomImplementation.getRoom(roomDTO.getRoom_no());
         try{
             if(room != null){
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+                return new ResponseEntity<Object>(HttpStatus.CONFLICT);
             }else{
-                return new ResponseEntity<>(roomImplementation.createRoom(roomDTO),HttpStatus.CREATED);
+                return new ResponseEntity<Object>(roomImplementation.createRoom(roomDTO),HttpStatus.CREATED);
             }
         }catch(Exception e){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -196,16 +194,16 @@ public class AppController extends WebMvcConfigurerAdapter {
                 List<Integer> roomsList = checkinRoomMappingImplementation.getRoom(room_no);
                 if(roomsList==null){
                     roomImplementation.deleteRoom(roomImplementation.getRoomByNumber(room_no));
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    return new ResponseEntity<Object>(HttpStatus.OK);
                 }else{
                     return new ResponseEntity<Object>(HttpStatus.CONFLICT);
                 }
                 //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -216,9 +214,9 @@ public class AppController extends WebMvcConfigurerAdapter {
     public ResponseEntity<?> getRoom (@Valid @PathVariable Integer room_no){
         try{
             if(room_no == null){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
             }else{
-                return new ResponseEntity<>(roomImplementation.getRoom(room_no),HttpStatus.OK);
+                return new ResponseEntity<Object>(roomImplementation.getRoom(room_no),HttpStatus.OK);
             }
         }catch(Exception e){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -258,11 +256,11 @@ public class AppController extends WebMvcConfigurerAdapter {
         RoomDTO room = roomImplementation.getRoom(room_no);
         try{
             if(room == null){
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
             }
             else{
                 roomImplementation.updateRoom(roomDTO);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<Object>(HttpStatus.OK);
             }
         }catch(Exception e){
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
@@ -305,14 +303,14 @@ public class AppController extends WebMvcConfigurerAdapter {
         Integer guest_id = guestImplementation.getGuestByLicenseNo(license_no);
         try{
             if(guest_id == null){
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
             }else{
                 ReservationDTO reservationDTO = reservationImplementation.getReservationById(reservation_token,guest_id);
                 //List<CheckinRoomMappingDTO> checkinRoomMappingDTOs = checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservationDTO);
-                return new ResponseEntity<>(checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservationDTO),HttpStatus.OK);
+                return new ResponseEntity<Object>(checkinRoomMappingImplementation.getReservationFromCheckinMapping(reservationDTO),HttpStatus.OK);
             }
         }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
         //ReservationDTO reservationDTO = reservationImplementation.getReservationById(reservation_token, guest_id);
@@ -391,10 +389,10 @@ public class AppController extends WebMvcConfigurerAdapter {
         HashMap<String, List<Integer>> map=checkinRoomMappingImplementation.getOccupiedRooms(date);
 
         if(map == null){
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<Object>(null,HttpStatus.NOT_FOUND);
         }
         else{
-            return new ResponseEntity<>(map,HttpStatus.OK);
+            return new ResponseEntity<Object>(map,HttpStatus.OK);
         }
     }
 }

@@ -9,6 +9,7 @@ import com.project.dto.GuestDTO;
 import com.project.dto.ReservationDTO;
 import com.project.dto.RoomDTO;
 import com.project.entities.*;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
@@ -54,7 +55,7 @@ public class ReservationImplementation {
     public final static long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 
     public String makeReservation(GuestDTO guestDTO, Integer no_of_rooms_Int, Date checkin_date, Date checkout_date) {
-
+        Integer guestID =0,guestCount;
         String room_selected = guestDTO.getRoom_no_selected();
         Guest guestObject = new Guest();
 
@@ -66,11 +67,28 @@ public class ReservationImplementation {
             e.printStackTrace();
         }
 
+        //check email id if exist
+        guestID = guestDAO.checkGuestExist(guestDTO.getGuest_email(),guestDTO.getLicense_no());
+        System.out.println("guestID: "+guestID);
+        //if email id, license exist
+        if(!(guestID==0)){
+            System.out.println("value = ");
+            //update details
+            guestCount = guestDAO.updateUserDetails(guestID,guestDTO.getGuest_name(),guestDTO.getStreet(),guestDTO.getCity(),guestDTO.getState(),guestDTO.getZip());
+            if(guestCount!=0)
+            guestObject = guestDAO.getGuestRecord(guestID);
+        }
+        else{
+        guestObject = guestDAO.save(guestObject);}
 
-        guestObject = guestDAO.save(guestObject);
+        String randomDate = FastDateFormat.getInstance("dd-MM-yyyy").format(System.currentTimeMillis( ));
+
+        UUID id = UUID.randomUUID();
+        String token_no = String.valueOf(id);
+        //System.out.println(sensor_id);
 
 
-        String token_no = guestObject.getLicense_no() + guestObject.getGuest_id();
+       // String token_no = guestObject.getLicense_no() + guestObject.getGuest_id()+randomDate;
 
         java.util.Date todayUtilDate = Calendar.getInstance().getTime();//2015-12-05
         java.sql.Date todaySqlDate = new java.sql.Date(todayUtilDate.getTime());
@@ -96,7 +114,6 @@ public class ReservationImplementation {
             checkinRoomMappingObject.setGuest_count(0);
             checkinRoomMappingObject.setMappingId(0);
             checkinRoomMappingDAO.save(checkinRoomMappingObject);
-
         }
         //add email code start here
 
@@ -106,7 +123,7 @@ public class ReservationImplementation {
                 ", <br/><br></br>Your reservation has been confirmed.Your reservation ID is <font color='red'><b>"+token_no+
                 "</b></font>.</br>Please bring the Driving License for verification at the time of Check In.</br><br></br>" +
                 "<b>Note:</b>If you want to cancel the reservation, " +
-                "please <a href=\'http://localhost:8080/CmpE275Team07Fall2015TermProject/v1/cancelReservation?reservation_token="+token_no+"\'>Click Here</a><br></br>--<i>Express Hotel</i>";
+                "please <a href=\'http://c4858cec.ngrok.io/CmpE275Team07Fall2015TermProject/v1/cancelReservation?reservation_token="+token_no+"\'>Click Here</a><br></br>--<i>Express Hotel</i>";
         String subject = "Express Hotel Reservation Confirmation <"+token_no +">";
 
         final String password = "Minihotel@2015";
@@ -168,7 +185,7 @@ public class ReservationImplementation {
 
     public ArrayList<HashMap<String,String>> cancelReservation(ReservationDTO reservationDTO) {
         System.out.println("reservation token - cancelReservation: "+reservationDTO.getReservation_token());
-        ArrayList<HashMap<String,String>> statusChanged = new ArrayList<>();
+        ArrayList<HashMap<String,String>> statusChanged = new ArrayList<HashMap<String,String>>();
 
 
         List<Reservation> reservObject = reservationDAO.find(reservationDTO.getReservation_token());
@@ -182,7 +199,7 @@ public class ReservationImplementation {
                 System.out.println(reservationStatusChanged);
                 if(reservationStatusChanged>0){
 
-                    HashMap<String,String> status = new HashMap<>();
+                    HashMap<String,String> status = new HashMap<String,String>();
                     status.put("status","Cancelled");
                     statusChanged.add(status);
                 }
@@ -202,8 +219,8 @@ public class ReservationImplementation {
         String userNameString = userName.get(0).getUser_name().toString();
         System.out.println("userNameString: "+userNameString);
 
-        ArrayList<HashMap<String,String>> billList = new ArrayList<>();
-        HashMap<String,String> billHash = new HashMap<>();
+        ArrayList<HashMap<String,String>> billList = new ArrayList<HashMap<String,String>>();
+        HashMap<String,String> billHash = new HashMap<String,String>();
 
         if(user_name.equals(userNameString)){
             //fetch reservation id
@@ -236,7 +253,7 @@ public class ReservationImplementation {
             String noOfDaysStayed = String.valueOf(daysStay);//
             System.out.println("noOfDaysStayed: "+noOfDaysStayed);
             Double totalBill = 0.0;
-            ArrayList<HashMap<String,String>> mailContent = new ArrayList<>();
+            ArrayList<HashMap<String,String>> mailContent = new ArrayList<HashMap<String,String>>();
             for(int i = 0;i<checkinMappingRecords.size();i++){
                 System.out.println("Room("+i+") : "+checkinMappingRecords.get(i).getRoom_no());
 
@@ -265,7 +282,7 @@ public class ReservationImplementation {
                 totalBill = totalBill+billPerRoom;
 
                 //set hash map
-                HashMap<String,String> mailBody = new HashMap<>();
+                HashMap<String,String> mailBody = new HashMap<String,String>();
                 mailBody.put("Room_Number",roomNoInString);
                 mailBody.put("Room_Type",type);
                 mailBody.put("Room_Price",roomPriceString);

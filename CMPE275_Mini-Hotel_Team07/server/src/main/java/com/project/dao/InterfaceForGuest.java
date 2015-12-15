@@ -24,4 +24,10 @@ public interface InterfaceForGuest {
    public Guest getGuestByLicenseNo(String licenseNo);
 
     List<Guest> findGuestEmailId(Integer guest_id);
+
+    Integer checkGuestExist(String guest_email,String license_no);
+
+    Integer updateUserDetails(Integer guestID, String guest_name, String street, String city, String state, Integer zip);
+
+    Guest getGuestRecord(Integer guestID);
 }
