@@ -123,7 +123,7 @@ public class ReservationImplementation {
                 ", <br/><br></br>Your reservation has been confirmed.Your reservation ID is <font color='red'><b>"+token_no+
                 "</b></font>.</br>Please bring the Driving License for verification at the time of Check In.</br><br></br>" +
                 "<b>Note:</b>If you want to cancel the reservation, " +
-                "please <a href=\'http://c4858cec.ngrok.io/CmpE275Team07Fall2015TermProject/v1/cancelReservation?reservation_token="+token_no+"\'>Click Here</a><br></br>--<i>Express Hotel</i>";
+                "please <a href=\'http://52.24.2.53:8080/CmpE275Team07Fall2015TermProject/v1/cancelReservation?reservation_token="+token_no+"\'>Click Here</a><br></br>--<i>Express Hotel</i>";
         String subject = "Express Hotel Reservation Confirmation <"+token_no +">";
 
         final String password = "Minihotel@2015";
