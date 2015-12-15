@@ -1,0 +1,30 @@
+body {
+	padding-top: 50px;
+}
+
+.starter-template {
+	padding: 40px 15px;
+	text-align: center;
+}
+
+.navbar-inverse {
+	background-color: #2ea681;
+	border-color: #2ea681;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+	color: #ffffff;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #ffffff;
+}
+
+.Share-instantly-right h3{
+	
+	
+	font-weight: 700;
+    font-size: 3em;
+    color: #2ea681;
+    text-align: center;
+}

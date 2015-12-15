@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Generate Bill</title>
+    
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="./css/bootstrap.css" rel="stylesheet">-->
+
+   <link href="./css/new-template-pally.css" rel="stylesheet">
+
+
+ 
+  </head>
+
+  <body >
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"> Express Hotels - Mini Hotel Management</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+             <li class="active"><a href="billing">Billing</a></li>
+			      <li><a href="index">Make Reservation</a></li>
+			      <li><a href="verifyReservation">Verify Reservation</a></li>
+            <li><a href="checkout">Guest Checkout & Billing</a></li>
+            <li><a href="report">Reports</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container" align="center">
+
+      <div class="pally-starter-template">
+      <!--   <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+         -->   
+				</div>
+				  <div class="col-md-6">
+                    <form style="text-align:center;" class="col-sm-6" name='billing' onsubmit="return validateForm()" action="/billing" method='POST' enctype='application/json'>
+           
+           <br><br>
+           <label for="generate_bill"><h3>Checkout</h3></label>
+           <br><br><br>
+           
+           <label for="reservation_token">Reservation Token</label><br>
+           <input type=text name='reservation_token'/> <br></br>
+           
+           <label for="user_name">Username</label> <br>
+           <input type=text name='user_name' /><br/><br/>
+           
+            <label for="discount">Discount percentage</label> <br>
+            <input type=text name='discount'/> <br></br>
+        
+             
+                <!--<input name="Verify" type="submit" value="Verify Reservation" />-->
+                <button type="submit" class="btn  btn-warning">Checkout and Generate Bill</button>
+              </td>
+            </tr>
+          </table>
+          <!-- <input type='submit' value="submit"> -->
+          <!--<input type="hidden" name="${_csrf.parameterName}"-->
+          <!--  value="${_csrf.token}" />-->
+
+        </form>
+                </div>
+				<div class="clearfix"> </div>
+			</div>
+        
+        <div class="row">
+        
+        <div class="col-sm-3">
+        
+        </div>
+        
+        <div class="col-sm-6">
+ 
+        </div>
+        
+        </div>
+        
+      </div>
+
+    </div><!-- /.container -->
+
+<h3 style="color:#20bfa3; font-size:22px;"> <%= resultStr %> </h3>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+   
+  </body>
+</html>

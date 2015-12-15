@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Available Rooms</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <!--<link href="./css/bootstrap.css" rel="stylesheet">-->
+
+  <link href="./css/new-template-pally.css" rel="stylesheet">
+    
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#example').dataTable();
+
+        })
+    </script>
+</head>
+<body>
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Mini Hotel Management</a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="availableRooms">Available Rooms</a></li>
+			      <li><a href="index">Make Reservation</a></li>
+			      <li><a href="verifyReservation">Verify Reservation</a></li>
+            <li><a href="checkout">Guest Checkout & Billing</a></li>
+            <li><a href="report">Reports</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </nav>
+<br></br>
+   
+	
+<div style="width: 50%; border-radius: 20px; border-color: black">
+    <table id="example" class="display">
+        <h3 style="color:#20bfa3; font-size:22px;">Available Rooms</h3>
+        <br>
+    <thead>
+    <tr>
+        <td><strong>Room No</strong><td>
+        <td><strong>Action</strong><td>
+       
+    </tr>
+    </thead>
+<%availableRooms.forEach(function(availableRooms) { %>
+
+    <tr>
+    <td><%=availableRooms.room_no%><td>
+    </tr>
+        <%});%>
+    </table><br><br><hr>
+    <form action = "/bookRoom" enc-type="application/json" method="POST">
+        <input type="hidden" name="room_nos" value= <%=roomString%> />
+        <input type="hidden" name="room_count" value= <%=availableRooms.length%> />
+        <input type="hidden" name="checkin_date" value= <%=checkin_date%> />
+        <input type="hidden" name="checkout_date" value= <%=checkout_date%> />
+        
+        <input type="submit" value="Book"/>
+        <br><br>
+        <h1><%=strError%></h1>
+</div>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+  
+ <link href="./css/new-template-pally.css" rel="stylesheet">
+    <title></title>
+    <label>
+        <h2>Guests Exists!!!</h2></label>
+    </br>
+    </br>
+
+  <!-- Bootstrap core CSS -->
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+  <!--<link href="./css/bootstrap.css" rel="stylesheet">-->
+  
+  <link href="./css/new-template-pally.css" rel="stylesheet">
+
+ 
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#example').dataTable();
+
+        })
+    </script>
+</head>
+
+<body>
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Mini Hotel Management</a>
+      </div>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="guestsExists">Existing Guests</a></li>
+         <li><a href="index">Make Reservation</a></li>
+			<li><a href="verifyReservation">Verify Reservation</a></li>
+            <li><a href="checkout">Guest Checkout & Billing</a></li>
+            <li><a href="report">Reports</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </nav>
+<br></br>
+   
+   
+    <div style="width: 50%; border-radius: 20px; border-color: black">
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <td><strong>Reservation Id</strong>
+                        <td>
+                            <td><strong>Room No</strong>
+                                <td>
+                                    <td><strong>Checkin Date</strong>
+                                        <td>
+                                            <td><strong>Checkout Date</strong>
+                                                <td>
+                                                    <td><strong>Guests per room</strong>
+                                                        <td>
+
+                </tr>
+            </thead>
+            <%guestsExists.forEach(function(guestsExists) { %>
+
+                <tr>
+                    <td>
+                        <%=guestsExists.reservation_id%>
+                            <td>
+                                <td>
+                                    <%=guestsExists.room_no%>
+                                        <td>
+
+                                            <td>
+                                                <%=guestsExists.checkin_date%>
+                                                    <td>
+                                                        <td>
+                                                            <%=guestsExists.checkout_date%>
+                                                                <td>
+                                                                    <td>
+                                                                        <iframe srcdoc="
+                                                                                        <form action='/checkinGuest' method='POST' enc-type='application/json'>
+                                                                                            Enter number of guests for this room:<br>
+                                                                                            <input type='text' name='guest_count' />
+                                                                                            <input type='hidden' name='reservation_id' value=<%=guestsExists.reservation_id%> />
+                                                                                            <input type='hidden' name='room_no' value=<%=guestsExists.room_no%> />
+                                                                                            <input type='hidden' name='mappingId' value=<%=guestsExists.mappingId%> />
+                                                                                            <input type='hidden' name='checkin_date' value=<%=guestsExists.checkin_date%> />
+                                                                                            <input type='hidden' name='checkout_date' value=<%=guestsExists.checkout_date%> />
+                                                                                            <input type='submit' value='Checkin' />
+                                                                                        </form>
+                                                                                        "></iframe>
+                                                                        <td>
+                </tr>
+                <%});%>
+        </table>
+
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+.privacy_mob_img {
+ float:left; position:relative;
+  margin-left: 5%;
+}
+
+.privacy_mob_img img{
+ position: absolute;top: 35px;
+ }
+ 
+ .about_container
+{
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 85%;
+  overflow-y: scroll;
+  margin-left: 30%;
+}
+
+
+.privacy_container
+{
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 85%;
+  overflow-y: scroll;
+  margin-left: 30%;
+}
+
+.privacy_header
+{
+	font-size: 16px;
+	margin : 40px 30% 10px 10px
+}
+
+.privacy_content
+{
+	margin : 10px 30% 10px 10px
+}
+
+.privacy_general_steps
+{
+	margin : 20px 30% 20px 30px
+}
+
+.about_headng{
+	font-size: 16px;
+	margin : 40px 30% 10px 10px
+}
+
+.about_content{
+	margin : 10px 30% 10px 10px
+}
+
+.about_team_member{
+	width : 100%;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	
+}
+
+.team_info_heading {
+	font-size : 16px;
+	margin-top : 10px;
+	margin-bottom : 10px;
+}
+
+.team_info_content{
+	margin-top : 10px;
+}
+.team_member_info{
+  margin-left: 15%;
+  margin-right: 30%;
+}
+
+.team_member_image{
+float : left;
+width : 150px;
+height : 150px;
+}
+
+
+
